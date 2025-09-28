@@ -24,7 +24,7 @@ Video Transcript → NLP Fear Score → Alignment → Analytics → Visualizatio
 
 * **Backend**: FastAPI + Celery for async processing
 * **Storage**: Postgres/TimescaleDB + MinIO (object storage)
-* **NLP**: Falconsai/fear_mongering_detection
+* **NLP**: [Falconsai/fear_mongering_detection](https://huggingface.co/Falconsai/fear_mongering_detection)
 * **Frontend**: Streamlit (MVP) or Next.js (scalable)
 
 ---
