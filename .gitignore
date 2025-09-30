@@ -1,0 +1,45 @@
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pkl
+*.db
+
+# Virtual environment
+venv/
+.env/
+.venv/
+env/
+*.egg-info/
+.eggs/
+
+# Jupyter / Notebooks
+.ipynb_checkpoints/
+
+# --- Streamlit ---
+.streamlit/secrets.toml
+.streamlit/config.toml
+
+# --- Data files ---
+# /data/*.csv
+# /data/*.json
+# /data/*.parquet
+# /data/*.xlsx
+
+# --- OS files ---
+.DS_Store
+Thumbs.db
+
+# --- IDEs ---
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# --- Logs ---
+*.log
+
+# --- Build / packaging ---
+dist/
+build/
