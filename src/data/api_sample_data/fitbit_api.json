@@ -1,0 +1,80 @@
+{
+    "description": "Fitbit Web API - Intraday Heart Rate Time Series",
+    "endpoint": "GET /1/user/-/activities/heart/date/[date]/1d/1sec.json",
+    "documentation": "https://dev.fitbit.com/build/reference/web-api/intraday/",
+    "response": {
+      "activities-heart": [
+        {
+          "dateTime": "2025-09-29",
+          "value": {
+            "customHeartRateZones": [
+              {
+                "caloriesOut": 1164.09312,
+                "max": 90,
+                "min": 30,
+                "minutes": 718,
+                "name": "Below"
+              },
+              {
+                "caloriesOut": 203.65344,
+                "max": 110,
+                "min": 90,
+                "minutes": 74,
+                "name": "Custom Zone"
+              },
+              {
+                "caloriesOut": 330.76224,
+                "max": 220,
+                "min": 110,
+                "minutes": 42,
+                "name": "Above"
+              }
+
+            ],
+            "heartRateZones": [
+              {
+                "caloriesOut": 45.2,
+                "max": 93,
+                "min": 30,
+                "minutes": 5,
+                "name": "Out of Range"
+              },
+              {
+                "caloriesOut": 12.8,
+                "max": 130,
+                "min": 93,
+                "minutes": 0,
+                "name": "Fat Burn"
+              }
+            ],
+            "restingHeartRate": 68
+          }
+        }
+      ],
+      "activities-heart-intraday": {
+        "dataset": [
+          { "time": "10:30:00", "value": 68 },
+          { "time": "10:30:01",  "value": 69},
+          { "time": "10:30:02", "value": 70 },
+          { "time": "10:30:15", "value": 72 },
+          { "time": "10:30:30", "value": 75 },
+          { "time": "10:30:45", "value": 78 },
+          { "time": "10:31:00", "value": 92 },
+          { "time": "10:31:05", "value": 105 },
+          { "time": "10:31:10", "value": 118 },
+          { "time": "10:31:15", "value": 125 },
+          { "time": "10:31:20", "value": 122 },
+          { "time": "10:31:30", "value": 115 },
+          { "time": "10:31:45", "value": 105 },
+          { "time": "10:32:00", "value": 95 },
+          { "time": "10:32:30", "value": 85 },
+          { "time": "10:33:00", "value": 78 },
+          { "time": "10:33:30", "value": 72 },
+          { "time": "10:34:00", "value": 70 },
+          { "time": "10:34:30", "value": 68 }
+        ],
+        "datasetInterval": 1,
+        "datasetType": "second"
+      }
+    }
+  }

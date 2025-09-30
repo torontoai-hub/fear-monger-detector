@@ -1,0 +1,97 @@
+
+{
+    "description": "Android Health Connect - Heart Rate Records",
+    "platform": "androidx.health.connect.client",
+    "documentation": "https://developer.android.com/guide/health-and-fitness/health-connect",
+    "sample_records": {
+      "records": [
+        {
+          "metadata": {
+            "id": "ahc_hr_1234567890abcdef",
+            "dataOrigin": "com.fitbit.FitbitMobile",
+            "lastModifiedTime": "2025-09-29T10:35:00.000Z",
+            "clientRecordId": "fitbit_hr_001",
+            "clientRecordVersion": 1,
+            "device": {
+              "manufacturer": "Fitbit",
+              "model": "Charge 5",
+              "type": 1
+            }
+          },
+          "startTime": "2025-09-29T10:30:00.000Z",
+          "endTime": "2025-09-29T10:30:01.000Z",
+          "samples": [
+            {
+              "time": "2025-09-29T10:30:00.000Z",
+              "beatsPerMinute": 68
+            }
+          ]
+        },
+        {
+          "metadata": {
+            "id": "ahc_hr_1234567890abcdeg",
+            "dataOrigin": "com.fitbit.FitbitMobile",
+            "lastModifiedTime": "2025-09-29T10:35:00.000Z",
+            "clientRecordId": "fitbit_hr_002",
+            "clientRecordVersion": 1
+          },
+          "startTime": "2025-09-29T10:30:01.000Z",
+          "endTime": "2025-09-29T10:30:02.000Z",
+          "samples": [
+            {
+              "time": "2025-09-29T10:30:01.000Z",
+              "beatsPerMinute": 69
+            }
+          ]
+        },
+        {
+          "metadata": {
+            "id": "ahc_hr_1234567890abcdeh",
+            "dataOrigin": "com.samsung.health",
+            "lastModifiedTime": "2025-09-29T10:35:00.000Z",
+            "device": {
+              "manufacturer": "Samsung",
+              "model": "Galaxy Watch 5",
+              "type": 1
+            }
+          },
+          "startTime": "2025-09-29T10:31:00.000Z",
+          "endTime": "2025-09-29T10:31:20.000Z",
+          "samples": [
+            { "time": "2025-09-29T10:31:00.000Z", "beatsPerMinute": 92 },
+            { "time": "2025-09-29T10:31:05.000Z", "beatsPerMinute": 105 },
+            { "time": "2025-09-29T10:31:10.000Z", "beatsPerMinute": 118 },
+            { "time": "2025-09-29T10:31:15.000Z", "beatsPerMinute": 125 },
+            { "time": "2025-09-29T10:31:20.000Z", "beatsPerMinute": 122 }
+          ]
+        },
+        {
+          "metadata": {
+            "id": "ahc_hr_1234567890abcdei",
+            "dataOrigin": "com.samsung.health",
+            "lastModifiedTime": "2025-09-29T10:35:00.000Z"
+          },
+          "startTime": "2025-09-29T10:32:00.000Z",
+          "endTime": "2025-09-29T10:32:30.000Z",
+          "samples": [
+            {  "time": "2025-09-29T10:32:00.000Z",
+              "beatsPerMinute": 95
+            },
+            {
+              "time": "2025-09-29T10:32:30.000Z",
+              "beatsPerMinute": 85
+            }
+          ]
+        }
+      ]
+    },
+    "kotlin_query_code": "val response = healthConnectClient.readRecords(\n    ReadRecordsRequest(\n        recordType = HeartRateRecord::class,\n        timeRangeFilter = TimeRangeFilter.between(startTime, endTime)\n    )\n)",
+    "key_features": {
+      "granularity": "Multiple samples per record",
+      "permission_required": true,
+      "aggregation_support": true,
+      "multi_app_data": true,
+      "units": "beatsPerMinute (Long)",
+      "device_info": "Optional manufacturer/model metadata"
+    }
+  }

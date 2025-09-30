@@ -1,0 +1,110 @@
+{
+    "description": "iOS HealthKit - Heart Rate Query Results",
+    "framework": "HealthKit.framework",
+    "documentation": "https://developer.apple.com/documentation/healthkit",
+    "sample_query_result": {
+      "samples": [
+        {
+          "uuid": "A1B2C3D4-E5F6-7890-ABCD-EF1234567890",
+          "identifier": "HKQuantityTypeIdentifierHeartRate",
+          "startDate": "2025-09-29T10:30:00.000-0400",
+          "endDate": "2025-09-29T10:30:01.000-0400",
+          "device": {
+            "name": "Apple Watch",
+            "manufacturer": "Apple Inc.",
+            "model": "Watch6,1",
+            "hardwareVersion": "Watch6,1",
+            "softwareVersion": "10.0"
+          },
+          "sourceRevision": {
+            "source": {
+              "name": "Apple Watch",
+              "bundleIdentifier": "com.apple.health.wellness"
+            },
+            "version": "10.0"
+          },
+          "quantity": {
+            "unit": "count/min",
+            "value": 68.0
+          },
+          "metadata": {
+            "HKMetadataKeyHeartRateMotionContext": 1
+          }
+        },
+        {
+          "uuid": "B2C3D4E5-F6G7-8901-BCDE-F12345678901",
+          "identifier": "HKQuantityTypeIdentifierHeartRate",
+          "startDate": "2025-09-29T10:30:01.000-0400",
+          "endDate": "2025-09-29T10:30:02.000-0400",
+          "quantity": {
+            "unit": "count/min",
+            "value": 69.0
+          },
+          "metadata": {
+            "HKMetadataKeyHeartRateMotionContext": 1
+          }
+        },
+        {
+          "uuid": "C3D4E5F6-G7H8-9012-CDEF-123456789012",
+          "identifier": "HKQuantityTypeIdentifierHeartRate",
+          "startDate": "2025-09-29T10:31:00.000-0400",
+          "endDate": "2025-09-29T10:31:01.000-0400",
+          "quantity": {
+            "unit": "count/min",
+            "value": 92.0
+          },
+          "metadata": {
+            "HKMetadataKeyHeartRateMotionContext": 1
+          }
+        },
+        {
+          "uuid": "D4E5F6G7-H8I9-0123-DEFG-234567890123",
+          "identifier": "HKQuantityTypeIdentifierHeartRate",
+          "startDate": "2025-09-29T10:31:10.000-0400",
+          "endDate": "2025-09-29T10:31:11.000-0400",
+          "quantity": {
+            "unit": "count/min",
+            "value": 118.0
+          },
+          "metadata": {
+            "HKMetadataKeyHeartRateMotionContext": 2
+          }
+        },
+        {
+          "uuid": "E5F6G7H8-I9J0-1234-EFGH-345678901234",
+          "identifier": "HKQuantityTypeIdentifierHeartRate",
+          "startDate": "2025-09-29T10:31:15.000-0400",
+          "endDate": "2025-09-29T10:31:16.000-0400",
+          "quantity": {
+            "unit": "count/min",
+            "value": 125.0
+          },
+          "metadata": {
+            "HKMetadataKeyHeartRateMotionContext": 2
+          }
+        },
+        {
+          "uuid": "F6G7H8I9-J0K1-2345-FGHI-456789012345",
+          "identifier": "HKQuantityTypeIdentifierHeartRate",
+          "startDate": "2025-09-29T10:32:00.000-0400",
+          "endDate": "2025-09-29T10:32:01.000-0400",
+          "quantity": {
+            "unit": "count/min",
+            "value": 95.0
+          },
+          "metadata": {
+            "HKMetadataKeyHeartRateMotionContext": 1
+          }
+        }
+      ]
+    },
+    "swift_query_code": "let heartRateType = HKQuantityType.quantityType(forIdentifier: .heartRate)!\nlet query = HKSampleQuery(sampleType: heartRateType, predicate: predicate, limit: HKObjectQueryNoLimit, sortDescriptors: nil) { query, results, error in\n    // Process results\n}",
+    "key_features": {
+      "granularity": "Device dependent (typically 1-5 seconds)",
+      "authorization_required": true,
+      "real_time": true,
+      "background_delivery": true,
+      "motion_context": "0=sedentary, 1=active, 2=not_set",
+      "units": "count/min (BPM)"
+    }
+  }
