@@ -1,3 +1,6 @@
+https://dev.fitbit.com/build/reference/web-api/heartrate-timeseries/get-heartrate-timeseries-by-date/
+
+
 Key Differences at a Glance:
 1. Data Structure
 
@@ -22,3 +25,8 @@ Android: Long beatsPerMinute: 125
 Fitbit: Heart rate zones, resting HR, calorie burn
 Apple: Motion context (0=sedentary, 1=active), background delivery
 Android: Multi-app data aggregation, flexible sample grouping
+
+Other potential sources of data:
+https://www.healthyapps.dev/
+https://tryterra.co/integrations/apple-health
+https://sahha.ai/
