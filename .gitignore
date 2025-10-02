@@ -6,11 +6,11 @@ __pycache__/
 *.pkl
 *.db
 
-# Virtual environment
+# Virtual environments
 venv/
-.env/
 .venv/
 env/
+.env/
 .env
 *.env
 *.egg-info/
@@ -23,21 +23,23 @@ env/
 .streamlit/secrets.toml
 .streamlit/config.toml
 
-# --- Data files ---
+# --- Data files (uncomment if you want to ignore these) ---
 # /data/*.csv
 # /data/*.json
 # /data/*.parquet
 # /data/*.xlsx
 
-# --- OS files ---
+# --- OS / system files ---
 .DS_Store
 Thumbs.db
 
-# --- IDEs ---
+# --- IDE / editor settings ---
 .vscode/
 .idea/
 *.swp
 *.swo
+*.sublime-workspace
+*.sublime-project
 
 # --- Logs ---
 *.log
@@ -45,3 +47,29 @@ Thumbs.db
 # --- Build / packaging ---
 dist/
 build/
+*.egg
+*.eggs
+*.whl
+*.manifest
+*.spec
+
+# --- Temporary / scratch ---
+scratch/
+tmp/
+*.tmp
+
+# --- Python test / coverage reports ---
+.coverage
+*.cover
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.coveragerc
+htmlcov/
+.tox/
+.pytest_cache/
+
+# --- Dependency lock files (optional) ---
+pip-log.txt
+pip-delete-this-directory.txt
