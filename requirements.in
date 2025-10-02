@@ -1,0 +1,60 @@
+# --- Core Dependencies ---
+setuptools
+wheel
+pip
+
+# --- Data & Numerical Processing ---
+numpy
+pandas
+python-dateutil
+pytz
+pyarrow
+sympy
+mpmath
+networkx
+attrs
+packaging
+
+# --- API & Backend Framework ---
+click
+Jinja2
+MarkupSafe
+blinker
+watchdog
+fsspec
+requests
+charset-normalizer
+idna
+certifi
+urllib3
+
+# --- Machine Learning & NLP ---
+transformers
+tokenizers
+huggingface-hub
+safetensors
+tenacity
+regex
+
+# --- Project-Specific / Misc ---
+jsonschema
+jsonschema-specifications
+referencing
+rpds-py
+toml
+smmap
+GitPython
+gitdb
+hf-xet
+narwhals
+
+# --- Utilities ---
+six
+typing_extensions
+tqdm
+
+# --- Streamlit (Demo Frontend) ---
+streamlit
+pydeck
+altair
+Pillow
