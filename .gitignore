@@ -73,3 +73,7 @@ htmlcov/
 # --- Dependency lock files (optional) ---
 pip-log.txt
 pip-delete-this-directory.txt
+
+
+# --- tokens ---
+fitbit_tokens.json
