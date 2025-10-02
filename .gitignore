@@ -28,6 +28,8 @@ env/
 # /data/*.json
 # /data/*.parquet
 # /data/*.xlsx
+# Ignore generated transcript chunks
+demos/ted_talk_streamlit_demo/ted_talks_transcript_chunks.csv
 
 # --- OS / system files ---
 .DS_Store
