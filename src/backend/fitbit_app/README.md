@@ -1,15 +1,24 @@
-Here’s a clean **README.md** layout you can use for your Fitbit project so the steps are clear.
-
----
-
-```markdown
 # Fitbit Data Fetcher
 
-This project implements a complete Fitbit OAuth 2.0 authentication flow and allows fetching Fitbit data (heart rate, activity, sleep, etc.) programmatically.
+A complete Fitbit OAuth 2.0 authentication flow to programmatically fetch Fitbit data (heart rate, activity, sleep, etc.).
 
 ---
 
-## 📂 Project Structure
+## Table of Contents
+
+- [Project Structure](#project-structure)  
+- [Getting Started](#getting-started)  
+  - [Step 1 — Register Your Fitbit App](#step-1-—-register-your-fitbit-app)  
+  - [Step 2 — Configure the App](#step-2-—-configure-the-app)  
+  - [Step 3 — Authenticate with Fitbit](#step-3-—-authenticate-with-fitbit)  
+  - [Step 4 — Fetch Fitbit Data](#step-4-—-fetch-fitbit-data)  
+  - [Step 5 — Automatic Token Refresh](#step-5-—-automatic-token-refresh)  
+- [Notes](#notes)  
+- [Resources](#resources)  
+
+---
+
+## Project Structure
 
 ```
 
@@ -22,13 +31,14 @@ fitbit_project/
 ├── main.py               # Main script to run the app
 └── README.md             # Project documentation
 
-````
+```
 
 ---
 
-## 🚀 Steps to Use
+## Getting Started
 
-### **Step 1 — Register Your App**
+### Step 1 — Register Your Fitbit App
+
 1. Go to [Fitbit Developer Portal](https://dev.fitbit.com/apps).
 2. Create a new app.
 3. Copy your:
@@ -39,19 +49,20 @@ fitbit_project/
 
 ---
 
-### **Step 2 — Configure the App**
+### Step 2 — Configure the App
+
 Edit `config.py` with your Fitbit app credentials:
+
 ```python
 CLIENT_ID = "YOUR_CLIENT_ID"
 CLIENT_SECRET = "YOUR_CLIENT_SECRET"
 REDIRECT_URI = "http://localhost:8080"
 SCOPES = "activity heartrate sleep"
 TOKEN_FILE = "fitbit_tokens.json"
-````
-
+```
 ---
 
-### **Step 3 — Authenticate with Fitbit**
+### Step 3 — Authenticate with Fitbit
 
 Run the authentication script to:
 
@@ -66,15 +77,15 @@ python fitbit_auth.py
 
 ---
 
-### **Step 4 — Fetch Fitbit Data**
+### Step 4 — Fetch Fitbit Data
 
-Use the stored tokens to call Fitbit APIs:
+Use stored tokens to call Fitbit APIs:
 
 ```bash
 python main.py
 ```
 
-Example endpoint:
+Example usage:
 
 ```python
 from fitbit_client import fetch_fitbit_data
@@ -85,31 +96,25 @@ print(data)
 
 ---
 
-### **Step 5 — Refresh Tokens Automatically**
+### Step 5 — Automatic Token Refresh
 
 The app automatically refreshes tokens when expired, using the stored `refresh_token` in `fitbit_tokens.json`.
 
 ---
 
-## 📌 Notes
+## Notes
 
 * Fitbit authorization codes expire quickly (30 seconds). Run `fitbit_auth.py` immediately after logging in.
-* Store your credentials securely and never commit them to public repositories.
-* Fitbit API documentation: [https://dev.fitbit.com/build/reference/web-api/](https://dev.fitbit.com/build/reference/web-api/)
+* Store your credentials securely. **Never commit them to public repositories.**
+* Fitbit API documentation: [Fitbit Web API Reference](https://dev.fitbit.com/build/reference/web-api/)
 
 ---
 
-## 📄 License
+## Resources
 
-MIT License
-
-```
+* [Fitbit Developer Portal](https://dev.fitbit.com/)
+* [Fitbit OAuth 2.0 Guide](https://dev.fitbit.com/build/reference/web-api/oauth2/)
+* [Fitbit API Endpoints](https://dev.fitbit.com/build/reference/web-api/)
 
 ---
 
-If you want, I can now **also make a matching `config.py`, `fitbit_auth.py`, and `fitbit_client.py` skeleton** so your project works exactly as described in the README.  
-
-That way you have a complete Fitbit project scaffold.  
-
-Do you want me to do that?
-```
