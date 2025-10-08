@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=45", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "fear-monger-detector"
+version = "0.1.0"
+description = "Fear Mongering Detector Application"
+requires-python = ">=3.8"
+dependencies = [
+    # Add your project dependencies here
+    # For example:
+    # "fastapi>=0.100.0",
+    # "uvicorn>=0.23.0",
+    # "pydantic>=2.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "black>=23.0.0",
+    "flake8>=6.0.0",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["*"]
+namespaces = false
