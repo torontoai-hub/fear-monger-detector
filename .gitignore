@@ -80,8 +80,23 @@ pip-delete-this-directory.txt
 # --- tokens ---
 fitbit_tokens.jsondocs/architecture_diagrams/*.bkp
 
-# --- backup files ---
-# docs/architecture_diagrams/*.dtmp
-*.bkp
+# # Ignore any temporary or backup files
+# # docs/architecture_diagrams/*.dtmp
+# *.bkp
+# *.dtmp
+# *.{bkp,dtmp}
+
+# # Ignore Fitbit heart data outputs
+# src/backend/fitbit_app/*.html
+# src/backend/fitbit_app/*.png
+# src/backend/fitbit_app/*.json
+
+# Ignore common generated file types
+*.html
+*.png
+*.json
+*.log
+*.tmp
+*.bak
 *.dtmp
-*.{bkp,dtmp}
+*.drawio.bkp
