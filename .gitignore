@@ -92,11 +92,17 @@ fitbit_tokens.jsondocs/architecture_diagrams/*.bkp
 # src/backend/fitbit_app/*.json
 
 # Ignore common generated file types
-*.html
-*.png
-*.json
+# *.html
+# *.png
+# *.json
 *.log
 *.tmp
 *.bak
 *.dtmp
 *.drawio.bkp
+
+# Generated data
+src/backend/fitbit_app/*.html
+src/backend/fitbit_app/*.png
+src/backend/fitbit_app/*.json
+src/data/**
