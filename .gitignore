@@ -78,6 +78,9 @@ pip-delete-this-directory.txt
 
 
 # --- tokens ---
+fitbit_tokens.json
+src/frontend/correlation_engine/fitbit_tokens.json
+src/backend/fitbit_app/fitbit_tokens.json
 fitbit_tokens.jsondocs/architecture_diagrams/*.bkp
 
 # # Ignore any temporary or backup files
