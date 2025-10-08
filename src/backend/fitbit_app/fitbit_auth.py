@@ -7,16 +7,16 @@ import urllib.parse
 from http.server import HTTPServer, BaseHTTPRequestHandler
 import webbrowser
 import time
-import config
+from .config import TOKEN_FILE, CLIENT_ID, CLIENT_SECRET, REDIRECT_URI, SCOPES
 
 PORT = 8090
 
 def generate_auth_url():
     params = {
         "response_type": "code",
-        "client_id": config.CLIENT_ID,
-        "redirect_uri": config.REDIRECT_URI,
-        "scope": config.SCOPES,
+        "client_id": CLIENT_ID,
+        "redirect_uri": REDIRECT_URI,
+        "scope": SCOPES,
         "expires_in": "604800"
     }
     return "https://www.fitbit.com/oauth2/authorize?" + urllib.parse.urlencode(params)
@@ -50,12 +50,12 @@ def authenticate():
 
     token_url = "https://api.fitbit.com/oauth2/token"
     data = {
-        "client_id": config.CLIENT_ID,
+        "client_id": CLIENT_ID,
         "grant_type": "authorization_code",
-        "redirect_uri": config.REDIRECT_URI,
+        "redirect_uri": REDIRECT_URI,
         "code": auth_code
     }
-    auth_header = base64.b64encode(f"{config.CLIENT_ID}:{config.CLIENT_SECRET}".encode()).decode()
+    auth_header = base64.b64encode(f"{CLIENT_ID}:{CLIENT_SECRET}".encode()).decode()
     headers = {
         "Authorization": f"Basic {auth_header}",
         "Content-Type": "application/x-www-form-urlencoded"
@@ -65,9 +65,9 @@ def authenticate():
     if response.ok:
         tokens = response.json()
         tokens["timestamp"] = time.time()
-        with open(config.TOKEN_FILE, "w") as f:
+        with open(TOKEN_FILE, "w") as f:
             json.dump(tokens, f, indent=2)
-        print("Tokens saved to", config.TOKEN_FILE)
+        print("Tokens saved to", TOKEN_FILE)
         return tokens["access_token"]
     else:
         raise Exception(f"Failed to authenticate: {response.text}")

@@ -1,14 +1,18 @@
 """app.py - Main Streamlit application"""
 import streamlit as st
 import datetime
-from models import load_classifier
-from data_loader import load_transcripts
-from utils import segment_text, assign_timestamps
-from analysis import run_inference, create_analysis_df
-from charts import create_matplotlib_chart, create_plotly_chart
-from config import PREVIEW_CHARS, DEFAULT_FEAR_THRESHOLD
+from ted_talks_app.models import load_classifier
+from ted_talks_app.data_loader import load_transcripts
+from ted_talks_app.utils import segment_text, assign_timestamps
+from ted_talks_app.analysis import run_inference, create_analysis_df
+from ted_talks_app.charts import create_matplotlib_chart, create_plotly_chart
+from ted_talks_app.config import PREVIEW_CHARS, DEFAULT_FEAR_THRESHOLD
 
-
+# import os, sys
+# # Add parent directory to sys.path if run directly (fix for Streamlit)
+# if __package__ is None or __package__ == "":
+#     sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+#     __package__ = "ted_talks_app"
 
 def display_transcript_preview(transcript):
     """Display transcript preview section"""
@@ -368,6 +372,55 @@ def main():
 
     st.markdown("---")
     st.caption(f"Analysis complete | Talk #{talk_index} | {len(paragraphs)} paragraphs | Generated: {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+
+    # -----------------------------
+    # QUICK CHECK SECTION
+    # -----------------------------
+    st.sidebar.header("Quick Fear Check")
+    quick_text = st.sidebar.text_area(
+        "Paste text here for quick analysis",
+        height=150,
+        help="Paste any text you want to quickly check for fear mongering."
+    )
+
+    if quick_text.strip():
+        st.sidebar.info("Running quick analysis...")
+
+        paragraphs = segment_text(quick_text)
+        if not paragraphs:
+            st.sidebar.warning("No paragraphs detected in your text.")
+        else:
+            # Assign fake timestamps for quick check
+            fake_duration = max(len(quick_text) // 10, 10)  # min duration = 10 seconds
+            timestamps = assign_timestamps(paragraphs, fake_duration)  
+
+            predictions = run_inference(classifier, paragraphs)
+            analysis_df = create_analysis_df(paragraphs, timestamps, predictions)
+
+            seconds = timestamps["seconds"]
+            scores = analysis_df["Fear Mongering Score"]
+
+            st.subheader("Quick Fear Mongering Analysis")
+            avg_score = scores.mean()
+            max_score = scores.max()
+            min_score = scores.min()
+
+            col1, col2, col3 = st.columns(3)
+            with col1:
+                st.metric("Paragraphs", len(paragraphs))
+            with col2:
+                st.metric("Average Score", f"{avg_score:.3f}")
+            with col3:
+                st.metric("Peak Score", f"{max_score:.3f}")
+
+            display_charts(seconds, scores, paragraphs, talk_index="quick_check")
+
+            st.subheader("Quick Analysis Table")
+            display_results_table(analysis_df, talk_index="quick_check", threshold=threshold, show_all_paragraphs=True)
+        
+        st.markdown("---")
+
+
 
 
 if __name__ == "__main__":

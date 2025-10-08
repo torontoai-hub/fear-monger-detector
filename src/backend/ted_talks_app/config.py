@@ -9,7 +9,10 @@ MODEL_NAME = "Falconsai/fear_mongering_detection"
 DEFAULT_FEAR_THRESHOLD = 0.6
 
 # Text processing
-MAX_CHARS = 250
+MAX_CHARS = 400
+
+MAX_SENTENCES = 5
+
 
 # UI
 PREVIEW_CHARS = 500

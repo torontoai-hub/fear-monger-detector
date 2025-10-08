@@ -1,6 +1,6 @@
 <mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/28.1.2 Chrome/138.0.7204.243 Electron/37.4.0 Safari/537.36" version="28.1.2">
   <diagram id="C5RBs43oDa-KdzZeNtuy" name="Page-1">
-    <mxGraphModel dx="2820" dy="1650" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="1901" dy="1121" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="WIyWlLk6GJQsqaUBKTNV-0" />
         <mxCell id="WIyWlLk6GJQsqaUBKTNV-1" parent="WIyWlLk6GJQsqaUBKTNV-0" />
@@ -120,7 +120,7 @@
         <mxCell id="oPZypz6bq9TwNKat6TRu-36" value="Ingestion Service&lt;div&gt;(text fetch)&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;glass=0;strokeWidth=1;shadow=0;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
           <mxGeometry x="1040" y="410" width="120" height="90" as="geometry" />
         </mxCell>
-        <mxCell id="69ZriI8vQTjnaDF4MFiF-6" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="oPZypz6bq9TwNKat6TRu-37" target="69ZriI8vQTjnaDF4MFiF-4">
+        <mxCell id="69ZriI8vQTjnaDF4MFiF-6" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="oPZypz6bq9TwNKat6TRu-37" target="69ZriI8vQTjnaDF4MFiF-4" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="oPZypz6bq9TwNKat6TRu-37" value="Backend Processing&lt;div&gt;- Preprocessing&lt;/div&gt;&lt;div&gt;- Fear Detection Model&lt;/div&gt;&lt;div&gt;-Correlation Engine&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;glass=0;strokeWidth=1;shadow=0;fillColor=#dae8fc;strokeColor=#6c8ebf;align=left;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
@@ -129,29 +129,88 @@
         <mxCell id="oPZypz6bq9TwNKat6TRu-40" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.544;entryY=1.006;entryDx=0;entryDy=0;entryPerimeter=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="oPZypz6bq9TwNKat6TRu-35" target="oPZypz6bq9TwNKat6TRu-37" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="69ZriI8vQTjnaDF4MFiF-3" value="&lt;p style=&quot;text-align: left; text-wrap-mode: nowrap;&quot; data-end=&quot;165&quot; data-start=&quot;0&quot;&gt;Transcript is generated from TV/News -&amp;gt; passed to the Fear Deterction Model -&amp;gt; Outputs a Fear Score&lt;/p&gt;&lt;p style=&quot;text-align: left; text-wrap-mode: nowrap;&quot; data-end=&quot;165&quot; data-start=&quot;0&quot;&gt;In parallel, a patient Heart Rate is collected from a sensor OR Simulated&lt;/p&gt;&lt;p style=&quot;text-align: left; text-wrap-mode: nowrap;&quot; data-end=&quot;165&quot; data-start=&quot;0&quot;&gt;Both feed into a correlation and visualization module to show how fear intensity aligns with psychological stress&lt;/p&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+        <mxCell id="69ZriI8vQTjnaDF4MFiF-3" value="&lt;p style=&quot;text-align: left; text-wrap-mode: nowrap;&quot; data-end=&quot;165&quot; data-start=&quot;0&quot;&gt;Transcript is generated from TV/News -&amp;gt; passed to the Fear Deterction Model -&amp;gt; Outputs a Fear Score&lt;/p&gt;&lt;p style=&quot;text-align: left; text-wrap-mode: nowrap;&quot; data-end=&quot;165&quot; data-start=&quot;0&quot;&gt;In parallel, a patient Heart Rate is collected from a sensor OR Simulated&lt;/p&gt;&lt;p style=&quot;text-align: left; text-wrap-mode: nowrap;&quot; data-end=&quot;165&quot; data-start=&quot;0&quot;&gt;Both feed into a correlation and visualization module to show how fear intensity aligns with psychological stress&lt;/p&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
           <mxGeometry x="90" y="354" width="600" height="110" as="geometry" />
         </mxCell>
-        <mxCell id="69ZriI8vQTjnaDF4MFiF-7" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="69ZriI8vQTjnaDF4MFiF-4" target="69ZriI8vQTjnaDF4MFiF-5">
+        <mxCell id="69ZriI8vQTjnaDF4MFiF-7" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="69ZriI8vQTjnaDF4MFiF-4" target="69ZriI8vQTjnaDF4MFiF-5" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="69ZriI8vQTjnaDF4MFiF-4" value="Visualization /&lt;div&gt;Time-Series plots&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;glass=0;strokeWidth=1;shadow=0;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+        <mxCell id="69ZriI8vQTjnaDF4MFiF-4" value="Visualization /&lt;div&gt;Time-Series plots&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;glass=0;strokeWidth=1;shadow=0;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
           <mxGeometry x="1380" y="552.5" width="120" height="90" as="geometry" />
         </mxCell>
-        <mxCell id="69ZriI8vQTjnaDF4MFiF-5" value="Doctor Dashboard&lt;div&gt;- Alerts if threshold is reached&lt;/div&gt;&lt;div&gt;- Reports and Trends&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;glass=0;strokeWidth=1;shadow=0;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+        <mxCell id="69ZriI8vQTjnaDF4MFiF-5" value="Doctor Dashboard&lt;div&gt;- Alerts if threshold is reached&lt;/div&gt;&lt;div&gt;- Reports and Trends&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;glass=0;strokeWidth=1;shadow=0;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
           <mxGeometry x="1540" y="552.5" width="120" height="90" as="geometry" />
         </mxCell>
-        <mxCell id="69ZriI8vQTjnaDF4MFiF-9" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="oPZypz6bq9TwNKat6TRu-36" target="69ZriI8vQTjnaDF4MFiF-8">
+        <mxCell id="69ZriI8vQTjnaDF4MFiF-9" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="oPZypz6bq9TwNKat6TRu-36" target="69ZriI8vQTjnaDF4MFiF-8" edge="1">
           <mxGeometry relative="1" as="geometry">
             <mxPoint x="1180" y="455" as="sourcePoint" />
             <mxPoint x="1280" y="570" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="69ZriI8vQTjnaDF4MFiF-8" value="Falconsai Detection&amp;nbsp;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Model&lt;/span&gt;&lt;div&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;(text -&amp;gt; fear score)&lt;/span&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;glass=0;strokeWidth=1;shadow=0;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+        <mxCell id="69ZriI8vQTjnaDF4MFiF-8" value="Falconsai Detection&amp;nbsp;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Model&lt;/span&gt;&lt;div&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;(text -&amp;gt; fear score)&lt;/span&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;glass=0;strokeWidth=1;shadow=0;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
           <mxGeometry x="1200" y="435" width="160" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="69ZriI8vQTjnaDF4MFiF-10" value="&lt;p data-end=&quot;1202&quot; data-start=&quot;1160&quot;&gt;So the doctor sees a &lt;strong data-end=&quot;1194&quot; data-start=&quot;1181&quot;&gt;dashboard&lt;/strong&gt; that:&lt;/p&gt;&lt;p data-end=&quot;1202&quot; data-start=&quot;1160&quot;&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;- Plots &lt;/span&gt;&lt;strong style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot; data-end=&quot;1240&quot; data-start=&quot;1211&quot;&gt;fear score vs. heart rate&lt;/strong&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt; over time&lt;/span&gt;&lt;/p&gt;&lt;p data-end=&quot;1202&quot; data-start=&quot;1160&quot;&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;- Issues &lt;/span&gt;&lt;strong style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot; data-end=&quot;1272&quot; data-start=&quot;1262&quot;&gt;alerts&lt;/strong&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt; if correlation exceeds a set threshold&lt;/span&gt;&lt;/p&gt;&lt;p data-end=&quot;1202&quot; data-start=&quot;1160&quot;&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;- Allows &lt;/span&gt;&lt;strong style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot; data-end=&quot;1345&quot; data-start=&quot;1323&quot;&gt;historical reports&lt;/strong&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt; for research or POC demo&lt;/span&gt;&lt;/p&gt;" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+        <mxCell id="69ZriI8vQTjnaDF4MFiF-10" value="&lt;p data-end=&quot;1202&quot; data-start=&quot;1160&quot;&gt;So the doctor sees a &lt;strong data-end=&quot;1194&quot; data-start=&quot;1181&quot;&gt;dashboard&lt;/strong&gt; that:&lt;/p&gt;&lt;p data-end=&quot;1202&quot; data-start=&quot;1160&quot;&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;- Plots &lt;/span&gt;&lt;strong style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot; data-end=&quot;1240&quot; data-start=&quot;1211&quot;&gt;fear score vs. heart rate&lt;/strong&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt; over time&lt;/span&gt;&lt;/p&gt;&lt;p data-end=&quot;1202&quot; data-start=&quot;1160&quot;&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;- Issues &lt;/span&gt;&lt;strong style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot; data-end=&quot;1272&quot; data-start=&quot;1262&quot;&gt;alerts&lt;/strong&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt; if correlation exceeds a set threshold&lt;/span&gt;&lt;/p&gt;&lt;p data-end=&quot;1202&quot; data-start=&quot;1160&quot;&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;- Allows &lt;/span&gt;&lt;strong style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot; data-end=&quot;1345&quot; data-start=&quot;1323&quot;&gt;historical reports&lt;/strong&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt; for research or POC demo&lt;/span&gt;&lt;/p&gt;" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
           <mxGeometry x="1330" y="713" width="300" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="XL1AVDFbVfTAMq6u_eOz-0" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="XL1AVDFbVfTAMq6u_eOz-1" target="XL1AVDFbVfTAMq6u_eOz-4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="XL1AVDFbVfTAMq6u_eOz-1" value="Wearable Device&lt;div&gt;(Fitbit, Apple,&lt;/div&gt;&lt;div&gt;Watch, Simulator)&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;glass=0;strokeWidth=1;shadow=0;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="1850" y="490" width="120" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="XL1AVDFbVfTAMq6u_eOz-2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="XL1AVDFbVfTAMq6u_eOz-3" target="XL1AVDFbVfTAMq6u_eOz-14">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="2030" y="169.9999999999999" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="XL1AVDFbVfTAMq6u_eOz-3" value="Transcript Source&lt;div&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;(csv files&lt;/span&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;)&lt;/span&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;glass=0;strokeWidth=1;shadow=0;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="1860" y="190" width="120" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="XL1AVDFbVfTAMq6u_eOz-4" value="Wearable API /&lt;div&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Data Collector&lt;/span&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;glass=0;strokeWidth=1;shadow=0;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="2065" y="490" width="120" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="XL1AVDFbVfTAMq6u_eOz-5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="XL1AVDFbVfTAMq6u_eOz-14" target="XL1AVDFbVfTAMq6u_eOz-16">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="XL1AVDFbVfTAMq6u_eOz-7" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="XL1AVDFbVfTAMq6u_eOz-8" target="XL1AVDFbVfTAMq6u_eOz-11">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="XL1AVDFbVfTAMq6u_eOz-8" value="-Correlation Engine&lt;div&gt;&lt;br&gt;&lt;div&gt;- Fear Detection Model&lt;/div&gt;&lt;div&gt;+ heart rate&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;glass=0;strokeWidth=1;shadow=0;fillColor=#dae8fc;strokeColor=#6c8ebf;align=left;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="2270" y="317.5" width="140" height="115" as="geometry" />
+        </mxCell>
+        <mxCell id="XL1AVDFbVfTAMq6u_eOz-9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="XL1AVDFbVfTAMq6u_eOz-18" target="XL1AVDFbVfTAMq6u_eOz-8">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="XL1AVDFbVfTAMq6u_eOz-10" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="XL1AVDFbVfTAMq6u_eOz-11" target="XL1AVDFbVfTAMq6u_eOz-12">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="XL1AVDFbVfTAMq6u_eOz-11" value="Visualization /&lt;div&gt;Time-Series plots&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;glass=0;strokeWidth=1;shadow=0;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="2550" y="330" width="120" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="XL1AVDFbVfTAMq6u_eOz-12" value="Doctor Dashboard&lt;div&gt;- Alerts if threshold is reached&lt;/div&gt;&lt;div&gt;- Reports and Trends&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;glass=0;strokeWidth=1;shadow=0;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="2700" y="330" width="120" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="XL1AVDFbVfTAMq6u_eOz-14" value="Falconsai Detection&amp;nbsp;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Model&lt;/span&gt;&lt;div&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;(text -&amp;gt; fear score)&lt;/span&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;glass=0;strokeWidth=1;shadow=0;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="2060" y="215" width="160" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="XL1AVDFbVfTAMq6u_eOz-15" value="&lt;p data-end=&quot;1202&quot; data-start=&quot;1160&quot;&gt;So the doctor sees a &lt;strong data-end=&quot;1194&quot; data-start=&quot;1181&quot;&gt;dashboard&lt;/strong&gt; that:&lt;/p&gt;&lt;p data-end=&quot;1202&quot; data-start=&quot;1160&quot;&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;- Plots &lt;/span&gt;&lt;strong style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot; data-end=&quot;1240&quot; data-start=&quot;1211&quot;&gt;fear score vs. heart rate&lt;/strong&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt; over time&lt;/span&gt;&lt;/p&gt;&lt;p data-end=&quot;1202&quot; data-start=&quot;1160&quot;&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;- Issues &lt;/span&gt;&lt;strong style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot; data-end=&quot;1272&quot; data-start=&quot;1262&quot;&gt;alerts&lt;/strong&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt; if correlation exceeds a set threshold&lt;/span&gt;&lt;/p&gt;&lt;p data-end=&quot;1202&quot; data-start=&quot;1160&quot;&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;- Allows &lt;/span&gt;&lt;strong style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot; data-end=&quot;1345&quot; data-start=&quot;1323&quot;&gt;historical reports&lt;/strong&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt; for research or POC demo&lt;/span&gt;&lt;/p&gt;" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="2550" y="642.5" width="300" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="XL1AVDFbVfTAMq6u_eOz-17" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="XL1AVDFbVfTAMq6u_eOz-16" target="XL1AVDFbVfTAMq6u_eOz-8">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="XL1AVDFbVfTAMq6u_eOz-16" value="time vs fear score&lt;div&gt;(CSV format)&amp;nbsp;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;glass=0;strokeWidth=1;shadow=0;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="2260" y="215" width="160" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="XL1AVDFbVfTAMq6u_eOz-19" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="XL1AVDFbVfTAMq6u_eOz-4" target="XL1AVDFbVfTAMq6u_eOz-18">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="2160" y="495" as="sourcePoint" />
+            <mxPoint x="2346" y="433" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="XL1AVDFbVfTAMq6u_eOz-18" value="Heart rate vs time&lt;div&gt;CSV format&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;glass=0;strokeWidth=1;shadow=0;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="2280" y="490" width="120" height="90" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>

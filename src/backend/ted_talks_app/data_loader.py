@@ -1,7 +1,7 @@
 """data_loader.py - Load transcript data"""
 import streamlit as st
 import pandas as pd
-from config import DATA_DIR
+from .config import DATA_DIR
 
 
 @st.cache_data

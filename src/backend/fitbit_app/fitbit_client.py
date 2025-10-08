@@ -4,8 +4,8 @@ import time
 import os
 import requests
 import base64
-import config
-from fitbit_auth import authenticate
+from .config import TOKEN_FILE, CLIENT_ID, CLIENT_SECRET, REDIRECT_URI
+from .fitbit_auth import authenticate
 
 def refresh_token(refresh_token):
     token_url = "https://api.fitbit.com/oauth2/token"
@@ -13,7 +13,7 @@ def refresh_token(refresh_token):
         "grant_type": "refresh_token",
         "refresh_token": refresh_token
     }
-    auth_header = base64.b64encode(f"{config.CLIENT_ID}:{config.CLIENT_SECRET}".encode()).decode()
+    auth_header = base64.b64encode(f"{CLIENT_ID}:{CLIENT_SECRET}".encode()).decode()
     headers = {
         "Authorization": f"Basic {auth_header}",
         "Content-Type": "application/x-www-form-urlencoded"
@@ -23,7 +23,7 @@ def refresh_token(refresh_token):
     if response.ok:
         tokens = response.json()
         tokens["timestamp"] = time.time()
-        with open(config.TOKEN_FILE, "w") as f:
+        with open(TOKEN_FILE, "w") as f:
             json.dump(tokens, f, indent=2)
         print("Token refreshed.")
         return tokens["access_token"]
@@ -31,8 +31,8 @@ def refresh_token(refresh_token):
         raise Exception(f"Failed to refresh token: {response.text}")
 
 def get_token():
-    if os.path.exists(config.TOKEN_FILE):
-        with open(config.TOKEN_FILE) as f:
+    if os.path.exists(TOKEN_FILE):
+        with open(TOKEN_FILE) as f:
             tokens = json.load(f)
 
         if time.time() > tokens.get("timestamp", 0) + tokens.get("expires_in", 0) - 60:
