@@ -25,9 +25,9 @@ env/
 
 # --- Data files (uncomment if you want to ignore these) ---
 # /data/*.csv
-# /data/*.json
-# /data/*.parquet
-# /data/*.xlsx
+/data/*.json
+/data/*.parquet
+/data/*.xlsx
 # Ignore generated transcript chunks
 demos/ted_talk_streamlit_demo/ted_talks_transcript_chunks.csv
 
@@ -78,4 +78,10 @@ pip-delete-this-directory.txt
 
 
 # --- tokens ---
-fitbit_tokens.json
+fitbit_tokens.jsondocs/architecture_diagrams/*.bkp
+
+# --- backup files ---
+# docs/architecture_diagrams/*.dtmp
+*.bkp
+*.dtmp
+*.{bkp,dtmp}
