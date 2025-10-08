@@ -1,0 +1,9 @@
+{
+  "access_token": "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIyM1RKUVIiLCJzdWIiOiJDVDNIVDgiLCJpc3MiOiJGaXRiaXQiLCJ0eXAiOiJhY2Nlc3NfdG9rZW4iLCJzY29wZXMiOiJyaHIgcmFjdCByc2xlIiwiZXhwIjoxNzU5OTU3MDk2LCJpYXQiOjE3NTk5MjgyOTZ9.Kez8y-3Axrp5gGLqzgkaTV4WV8kZI2kuZTzVts59tKs",
+  "expires_in": 28800,
+  "refresh_token": "9d2eb3d939fe2d6f76a4e69e8447de6f44aaea1e52b989abf558e15532281f67",
+  "scope": "heartrate activity sleep",
+  "token_type": "Bearer",
+  "user_id": "CT3HT8",
+  "timestamp": 1759928296.1777976
+}
