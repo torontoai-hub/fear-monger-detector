@@ -1,0 +1,325 @@
+
+/* ===================================
+    REFINED: INTELLIGENCE ANALYSIS (NO GRID)
+    Vibe: Clean • Professional • Focused
+=================================== */
+
+/* Main app background - Solid color */
+.stApp {
+    background-color: #0B1120;
+    color: #E8EAF0;
+}
+
+/* Sidebar */
+section[data-testid="stSidebar"] {
+    background-color: #0D1526;
+    border-right: 1px solid #1E3A5F;
+}
+
+/* Headers - Simplified but still authoritative */
+h1 {
+    color: #4FC3F7 !important;
+    font-weight: 700 !important;
+    text-transform: uppercase;
+    border-bottom: 2px solid #1E88E5;
+    padding-bottom: 0.4rem;
+}
+h2 {
+    color: #64B5F6 !important;
+    font-weight: 600 !important;
+    border-left: 3px solid #2196F3;
+    padding-left: 1rem;
+}
+h3 {
+    color: #90CAF9 !important;
+    font-weight: 600 !important;
+}
+
+/* Inputs - Cleaned up focus state */
+.stTextInput>div>div>input,
+.stTextArea textarea,
+.stDateInput>div>input,
+.stNumberInput>div>div>input,
+.stSelectbox>div>div>div,
+.stMultiSelect>div>div>div {
+    background-color: #0F1A2E !important;
+    color: #E8EAF0 !important;
+    border: 1px solid #1E3A5F !important;
+    border-radius: 4px;
+    transition: border-color 0.3s ease;
+}
+.stTextInput>div>div>input:focus,
+.stTextArea textarea:focus {
+    border-color: #2196F3 !important;
+}
+
+/* Buttons - Flat and modern */
+.stButton>button {
+    background-color: #1565C0;
+    color: #FFFFFF;
+    border-radius: 4px;
+    border: 1px solid #1565C0;
+    padding: 0.5em 1em;
+    font-weight: 600;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+.stButton>button:hover {
+    background-color: #1976D2;
+    border-color: #1976D2;
+}
+
+/* Metrics - Removed text shadow for clarity */
+div[data-testid="stMetricValue"] {
+    color: #4FC3F7 !important;
+    font-weight: 700 !important;
+    font-family: 'Roboto Mono', monospace;
+}
+div[data-testid="stMetricLabel"] {
+    color: #90A4AE !important;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+[data-testid="metric-container"] {
+    background-color: #0F1A2E;
+    border: 1px solid #1E3A5F;
+    border-radius: 6px;
+    padding: 1rem;
+}
+
+/* Tables & DataFrames - Simplified header */
+.stDataFrame, .dataframe {
+    background-color: #0D1526 !important;
+    border: 1px solid #1E3A5F;
+    border-radius: 6px;
+    font-family: 'Roboto Mono', monospace;
+}
+.dataframe tbody tr:nth-child(even) {
+    background-color: #0F1A2E !important;
+}
+.dataframe tbody tr:hover {
+    background-color: #1A2F4A !important;
+}
+.dataframe thead th {
+    background-color: #1565C0 !important; /* Solid color header */
+    color: #FFFFFF !important;
+    font-weight: 600;
+    text-transform: uppercase;
+    border-bottom: 2px solid #2196F3 !important;
+}
+.dataframe tbody td {
+    border-bottom: 1px solid #1E3A5F !important;
+}
+
+/* Expanders - Simpler hover effect */
+.streamlit-expanderHeader {
+    background-color: #0F1A2E !important;
+    color: #4FC3F7 !important;
+    border: 1px solid #1E3A5F !important;
+    border-radius: 6px;
+    transition: background-color 0.3s ease;
+}
+.streamlit-expanderHeader:hover {
+    background-color: #1A2F4A !important;
+}
+.streamlit-expanderContent {
+    background-color: #0D1526 !important;
+    border: 1px solid #1E3A5F !important;
+    border-top: none !important;
+}
+
+/* Alert boxes - Solid backgrounds instead of gradients */
+.stSuccess, .stError, .stWarning, .stInfo {
+    padding: 1rem !important;
+    border-radius: 6px;
+}
+.stSuccess {
+    background-color: rgba(76, 175, 80, 0.15) !important;
+    border-left: 4px solid #4CAF50 !important;
+    color: #81C784 !important;
+}
+.stError {
+    background-color: rgba(244, 67, 54, 0.15) !important;
+    border-left: 4px solid #F44336 !important;
+    color: #EF5350 !important;
+}
+.stWarning {
+    background-color: rgba(255, 152, 0, 0.15) !important;
+    border-left: 4px solid #FF9800 !important;
+    color: #FFB74D !important;
+}
+.stInfo {
+    background-color: rgba(33, 150, 243, 0.15) !important;
+    border-left: 4px solid #2196F3 !important;
+    color: #64B5F6 !important;
+}
+
+/* Plotly charts - Removed shadow */
+.js-plotly-plot {
+    border: 1px solid #1E3A5F;
+    border-radius: 8px;
+}
+
+
+/* ======================================
+   COMPLETE SLIDER FIX — BLUE THEME (NO RED ANYWHERE)
+   ====================================== */
+
+/* Slider container reset */
+.stSlider {
+    background: transparent !important;
+    padding: 0.5rem 0;
+}
+
+/* Label */
+.stSlider label {
+    color: #64B5F6 !important;
+    font-weight: 500;
+}
+
+/* Clear Streamlit default gradient / red overlays */
+.stSlider [data-baseweb="slider"] > div {
+    background: none !important;
+}
+
+/* Entire track area */
+.stSlider [data-baseweb="slider"] > div > div {
+    background: #1E3A5F !important; /* muted blue-gray for base */
+    height: 6px !important;
+    border-radius: 3px;
+}
+
+/* Filled portion (active range) */
+.stSlider [data-baseweb="slider"] > div > div:nth-child(2) {
+    background: #2196F3 !important; /* main blue accent */
+}
+
+/* Unfilled portion (after sliding) */
+.stSlider [data-baseweb="slider"] > div > div:nth-child(3) {
+    background: #1E3A5F !important; /* same muted color as before */
+}
+
+/* Remove any temporary red overlays Streamlit applies during interaction */
+.stSlider [data-baseweb="slider"] [class*="trackBackground"] {
+    background: #1E3A5F !important;
+}
+.stSlider [data-baseweb="slider"] [class*="trackFill"] {
+    background: #2196F3 !important;
+}
+.stSlider [data-baseweb="slider"] [class*="trackHighlight"] {
+    background: #2196F3 !important;
+}
+
+/* Thumb (handle) */
+.stSlider [data-baseweb="slider"] > div > div > div {
+    background-color: #1565C0 !important;
+    border: 2px solid #64B5F6 !important;
+    box-shadow: 0 0 6px rgba(33, 150, 243, 0.6);
+    width: 20px !important;
+    height: 20px !important;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+}
+
+/* Thumb hover */
+.stSlider [data-baseweb="slider"] > div > div > div:hover {
+    background-color: #1976D2 !important;
+    border-color: #90CAF9 !important;
+    box-shadow: 0 0 10px rgba(100, 181, 246, 0.9);
+}
+
+/* Value bubble */
+.stSlider [data-baseweb="slider"] span {
+    color: #64B5F6 !important;
+    font-family: 'Roboto Mono', monospace;
+    font-weight: 600;
+}
+
+
+/* ======================================
+   TEXT + RADIO FIXES — BLUE THEME (NO RED)
+   ====================================== */
+
+/* === Slider Value Labels & Tick Marks === */
+.stSlider label,
+.stSlider span,
+.stSlider div[data-baseweb="slider"] span {
+    color: #64B5F6 !important; /* light blue accent text */
+}
+
+/* Active value indicator (the number above the thumb) */
+.stSlider [data-baseweb="slider"] [class*="thumbValue"] {
+    color: #64B5F6 !important;
+    background: transparent !important;
+    font-weight: 600;
+}
+
+/* Remove red glow or active overlay when dragging */
+.stSlider [data-baseweb="slider"] [class*="sliderHandle"]:focus {
+    outline: none !important;
+    box-shadow: 0 0 8px rgba(33, 150, 243, 0.7) !important;
+}
+
+/* === Radio Buttons === */
+
+/* Radio label text */
+.stRadio label {
+    color: #E8EAF0 !important; /* normal text color */
+}
+
+/* Radio button (unselected) */
+.stRadio [data-baseweb="radio"] > div:first-child {
+    border: 2px solid #1E3A5F !important; /* navy border */
+    background-color: transparent !important;
+}
+
+/* Radio button (selected) */
+.stRadio [data-baseweb="radio"] > div:first-child::before {
+    background-color: #2196F3 !important; /* blue fill */
+    border: 2px solid #64B5F6 !important; /* light blue ring */
+    box-shadow: 0 0 6px rgba(100, 181, 246, 0.7);
+}
+
+/* Radio hover */
+.stRadio [data-baseweb="radio"]:hover > div:first-child {
+    border-color: #2196F3 !important;
+    box-shadow: 0 0 4px rgba(33, 150, 243, 0.6);
+}
+
+/* Remove any red focus ring */
+.stRadio [data-baseweb="radio"] input:focus + div {
+    outline: none !important;
+    box-shadow: 0 0 6px rgba(33, 150, 243, 0.6) !important;
+}
+
+
+
+/* =========================
+   Embedded YouTube Video
+   ========================= */
+.video-container {
+    display: flex;
+    justify-content: center;
+    margin: 1.5rem 0;
+}
+
+.video-wrapper {
+    position: relative;
+    width: 100%;
+    max-width: 700px;
+    padding-bottom: 56.25%; /* 16:9 aspect ratio */
+    height: 0;
+    overflow: hidden;
+    border-radius: 12px;
+    background: #000;
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.4);
+}
+
+.video-wrapper iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+    border-radius: 12px;
+}
