@@ -9,6 +9,7 @@ from transformers import pipeline, AutoTokenizer
 from backend.fear_monger_processor.config import DEFAULT_FEAR_THRESHOLD, MODEL_NAME, MAX_CHARS
 from youtube_transcript_api import YouTubeTranscriptApi
 from urllib.parse import urlparse, parse_qs
+from nltk.tokenize import sent_tokenize
 
 # ======================================================
 # MODEL LOADING
@@ -45,12 +46,18 @@ def run_inference(_classifier, paragraphs):
 # CORE FUNCTIONS
 # ======================================================
 def segment_text(text, max_chars=MAX_CHARS, max_sentences=5):
-    """Split text into paragraphs based on sentence boundaries and limits."""
+    """
+    Split text into paragraphs based on sentence boundaries
+    using NLTK Punkt tokenizer.
+    """
 
-    sentences = re.split(r'(?<=[.!?])\s+', text)
+    # Step 1 — Split text into sentences using Punkt
+    sentences = sent_tokenize(text)
+
     paragraphs, current = [], []
     current_len, sentence_count = 0, 0
 
+    # Step 2 — Group sentences into paragraphs
     for sentence in sentences:
         sentence = sentence.strip()
         if not sentence:
@@ -72,6 +79,34 @@ def segment_text(text, max_chars=MAX_CHARS, max_sentences=5):
         paragraphs.append(" ".join(current).strip())
 
     return paragraphs
+# def segment_text(text, max_chars=MAX_CHARS, max_sentences=5):
+#     """Split text into paragraphs based on sentence boundaries and limits."""
+
+#     sentences = re.split(r'(?<=[.!?])\s+', text)
+#     paragraphs, current = [], []
+#     current_len, sentence_count = 0, 0
+
+#     for sentence in sentences:
+#         sentence = sentence.strip()
+#         if not sentence:
+#             continue
+
+#         space = 1 if current else 0
+#         if (current_len + len(sentence) + space > max_chars) or (sentence_count >= max_sentences):
+#             if current:
+#                 paragraphs.append(" ".join(current).strip())
+#             current = [sentence]
+#             current_len = len(sentence)
+#             sentence_count = 1
+#         else:
+#             current.append(sentence)
+#             current_len += len(sentence) + space
+#             sentence_count += 1
+
+#     if current:
+#         paragraphs.append(" ".join(current).strip())
+
+#     return paragraphs
 
 
 def assign_timestamps(paragraphs, total_duration_sec):

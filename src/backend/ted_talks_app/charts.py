@@ -28,6 +28,7 @@ def create_matplotlib_chart(seconds, scores, talk_index, chart_type="Line Chart"
 
 def create_plotly_chart(seconds, scores, paragraphs, talk_index, chart_type="Line Chart", max_hover_length=100):
     """Create interactive Plotly chart with hover tooltips based on selected type."""
+    
     start_time = datetime.datetime(2025, 1, 1, 0, 0, 0)
     time_axis = [start_time + datetime.timedelta(seconds=s) for s in seconds]
 
@@ -43,7 +44,8 @@ def create_plotly_chart(seconds, scores, paragraphs, talk_index, chart_type="Lin
         fig.add_trace(go.Scatter(
             x=time_axis,
             y=scores,
-            mode='lines+markers',
+            # mode='lines+markers',
+            mode='lines',
             line=dict(color='blue', width=2),
             marker=dict(size=8),  # Larger markers for easier hovering
             text=hover_texts,
@@ -74,17 +76,26 @@ def create_plotly_chart(seconds, scores, paragraphs, talk_index, chart_type="Lin
 
     fig.update_xaxes(
         tickformat="%H:%M:%S",
-        title_text="Elapsed Time (HH:MM:SS)"
+        title_text="Elapsed Time (HH:MM:SS)",
+        showgrid=True,
+        gridcolor="#333"
     )
     
     fig.update_yaxes(
         title_text="Score",
-        range=[0, 1]
+        range=[0, 1],
+        showgrid=True,
+        gridcolor="#333"
     )
 
     fig.update_layout(
+        
         title=f"Fear Mongering Score vs Time for Talk Index {talk_index} ({chart_type})",
         xaxis=dict(
+            title=f"Fear Mongering Score vs Time for Talk Index {talk_index} ({chart_type})",
+            paper_bgcolor="#0e1117",    # Dark background
+            plot_bgcolor="#0e1117",     # Dark plotting area
+            font=dict(color="#fafafa"), # Light font color
             rangeselector=dict(
                 buttons=[
                     dict(count=1, label='1m', step='minute', stepmode='backward'),
@@ -105,7 +116,8 @@ def create_plotly_chart(seconds, scores, paragraphs, talk_index, chart_type="Lin
             align='left',  # Global alignment
             bordercolor='blue'
         ),
-        dragmode='pan'  # This changes the default cursor behavior
+        dragmode='pan', # This changes the default cursor behavior
+        legend=dict(bgcolor="#262730") 
     )
 
     return fig

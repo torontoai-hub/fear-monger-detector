@@ -6,9 +6,10 @@ import pandas as pd
 import streamlit as st
 import plotly.graph_objects as go
 from transformers import pipeline, AutoTokenizer
-from backend.fear_monger_processor.config import DEFAULT_FEAR_THRESHOLD, MODEL_NAME, MAX_CHARS
+from backend.fear_monger_processor.config import DEFAULT_FEAR_THRESHOLD, MODEL_NAME, MAX_CHARS, FIXED_DURATION
 from youtube_transcript_api import YouTubeTranscriptApi
 from urllib.parse import urlparse, parse_qs
+from nltk.tokenize import sent_tokenize
 
 
 # ======================================================
@@ -17,7 +18,8 @@ from urllib.parse import urlparse, parse_qs
 def segment_text(text, max_chars=MAX_CHARS, max_sentences=5):
     """Split text into paragraphs based on sentence boundaries and limits."""
 
-    sentences = re.split(r'(?<=[.!?])\s+', text)
+    # sentences = re.split(r'(?<=[.!?])\s+', text)
+    sentences = sent_tokenize(text)
     paragraphs, current = [], []
     current_len, sentence_count = 0, 0
 
@@ -44,16 +46,33 @@ def segment_text(text, max_chars=MAX_CHARS, max_sentences=5):
     return paragraphs
 
 
-def assign_timestamps(paragraphs, total_duration_sec):
-    """Assign evenly spaced timestamps based on fake total duration."""
+# def assign_timestamps(paragraphs, total_duration_sec):
+#     """Assign evenly spaced timestamps based on fake total duration."""
+#     num = len(paragraphs)
+#     duration_per = total_duration_sec / max(num, 1)
+
+#     seconds, timestamps = [], []
+#     for i in range(num):
+#         sec = duration_per * i
+#         seconds.append(sec)
+#         # td = datetime.timedelta(seconds=sec)
+#         td = datetime.timedelta(seconds=int(sec))
+#         timestamps.append(str(td))
+
+#     return pd.DataFrame({"seconds": seconds, "timestamp_str": timestamps})
+
+def assign_timestamps(paragraphs):
+    """Assign evenly spaced timestamps for a fixed 10-minute test duration."""
     num = len(paragraphs)
-    duration_per = total_duration_sec / max(num, 1)
+    if num == 0:
+        return pd.DataFrame(columns=["seconds", "timestamp_str"])
+
+    duration_per = FIXED_DURATION / num
 
     seconds, timestamps = [], []
     for i in range(num):
         sec = duration_per * i
         seconds.append(sec)
-        # td = datetime.timedelta(seconds=sec)
         td = datetime.timedelta(seconds=int(sec))
         timestamps.append(str(td))
 
