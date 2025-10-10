@@ -169,14 +169,27 @@ def create_plotly_chart(seconds, scores, paragraphs, chart_type="Line Chart", ma
             hovertemplate='%{text}<extra></extra>',
             hoverlabel=dict(namelength=0)
         ))
+    # elif chart_type == "Area Chart":
+    #     fig.add_trace(go.Scatter(
+    #         x=time_axis,
+    #         y=scores,
+    #         mode='lines',
+    #         line=dict(color='blue', width=2),
+    #         fill='tozeroy',
+    #         fillcolor='rgba(0, 0, 255, 0.3)',
+    #         text=hover_texts,
+    #         hovertemplate='%{text}<extra></extra>',
+    #         hoverlabel=dict(namelength=0)
+    #     ))
+
     elif chart_type == "Area Chart":
         fig.add_trace(go.Scatter(
             x=time_axis,
             y=scores,
             mode='lines',
-            line=dict(color='blue', width=2),
+            line=dict(color='orange', width=2),
             fill='tozeroy',
-            fillcolor='rgba(0, 0, 255, 0.3)',
+            fillcolor='rgba(255, 165, 0, 0.3)',
             text=hover_texts,
             hovertemplate='%{text}<extra></extra>',
             hoverlabel=dict(namelength=0)
@@ -225,12 +238,26 @@ def display_results_table(analysis_df, threshold):
     """Display styled results table with optional highlighting"""
     def highlight_scores(row):
         score = row["Fear Mongering Score"]
-        if score >= threshold:
-            return ['background-color: #ffcccc'] * len(row)  # Light red
-        elif score >= 0.5:
-            return ['background-color: #ffffcc'] * len(row)  # Yellow
-        else:
-            return ['background-color: #ccffcc'] * len(row)  # Green
 
-    styled_df = analysis_df.style.apply(highlight_scores, axis=1)
+        if score >= threshold:
+            # Intense case (fear score very high)
+            return ['background-color: rgba(33, 150, 243, 0.25); color: #E8EAF0;'] * len(row)
+        elif score >= 0.5:
+            # Medium alert — lighter blue
+            return ['background-color: rgba(33, 150, 243, 0.15); color: #E8EAF0;'] * len(row)
+        else:
+            # Low — neutral dark tone
+            return ['background-color: #0F1A2E; color: #90CAF9;'] * len(row)
+
+    styled_df = (
+        analysis_df.style
+        .apply(highlight_scores, axis=1)
+        .set_properties(**{
+            'border': '1px solid #1E3A5F',
+            # 'color': '#E8EAF0',
+            'color': '#64B5F6', 
+            'font-family': "'Roboto Mono', monospace"
+        })
+    )
+
     st.dataframe(styled_df, use_container_width=True)

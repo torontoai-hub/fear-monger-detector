@@ -66,14 +66,13 @@ def create_plotly_chart(seconds, scores, paragraphs, talk_index, chart_type="Lin
             x=time_axis,
             y=scores,
             mode='lines',
-            line=dict(color='blue', width=2),
+            line=dict(color='rgba(33, 150, 243, 1)', width=2),
             fill='tozeroy',
-            fillcolor='rgba(0, 0, 255, 0.3)',
+            fillcolor='rgba(33, 150, 243, 0.4)',  # <-- CHANGE THIS LINE
             text=hover_texts,
-            hovertemplate='%{text}<extra></extra>',
-            hoverlabel=dict(namelength=0)
+            hovertemplate='%{text}<extra></extra>'
         ))
-
+        
     fig.update_xaxes(
         tickformat="%H:%M:%S",
         title_text="Elapsed Time (HH:MM:SS)",

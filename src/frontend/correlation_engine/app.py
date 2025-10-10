@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 import streamlit as st
 import pytz
 import nltk
+import plotly.express as px
 from backend.fear_monger_processor.model import load_classifier
 from backend.fear_monger_processor.inference import run_inference
 from backend.fear_monger_processor.transcript import get_video_id, fetch_transcript
@@ -22,6 +23,7 @@ base_dir = Path(__file__).resolve().parents[2]
 def load_css(file_path):
     with open(file_path) as f:
         st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
+        
 
 def main():
 
@@ -44,7 +46,7 @@ def main():
     # STREAMLIT UI
     # ======================================================
 
-    st.title("Fear Mongering Checker")
+    st.title("Fear Sensor")
 
     # ======================================================
     # Segmentation Settings
@@ -136,30 +138,8 @@ def main():
     # Text Input
     # ======================================================
 
-    url_input = st.text_input("Enter YouTube URL", help="Paste a YouTube link to fetch transcript automatically.")
 
-    # text_input = st.text_area(
-    #     "Or paste transcript text here:",
-    #     height=200,
-    #     help="Paste the transcript text directly if you don’t want to use a URL."
-    # )
 
-    # embed_code = f"""
-    # <iframe width="800" height="450"
-    # src="https://www.youtube.com/embed/{video_id}?start={start_time}&autoplay=0"
-    # frameborder="0" allowfullscreen>
-    # </iframe>
-    # """
-
-    # ======================================================
-    # Paste transcript
-    # ====================================================== 
-    quick_text = st.text_area(
-        "Or paste transcript text here:", 
-        height=200,
-        help="Paste the transcript text directly if you don’t want to use a URL."
-    )
-    
     # ======================================================
     # Ted Talks
     # ======================================================
@@ -245,87 +225,72 @@ def main():
             help="Uncheck to show only high-scoring paragraphs"
         )
         
-        # st.sidebar.markdown("---")
+        st.sidebar.markdown("---")
         
-        # st.sidebar.header("Display Options")
 
+    # ===============================
+    # YouTube URL Input
+    # ===============================
+    url_input = st.text_input(
+        "Enter YouTube URL:",
+        help="Paste a YouTube video URL to fetch its transcript."
+    )
 
+    # Create the expander immediately after URL input
+    with st.expander("Transcript Preview"):
+        expander_content = st.empty()
 
-
-    # ======================================================
-    # Run Analysis
-    # ======================================================
     transcript_text = None
     video_id = None
 
     if url_input.strip():
         video_id = get_video_id(url_input.strip())
+
         if video_id:
-            st.info(f"Fetching transcript for video ID: `{video_id}` ...")
-            transcript_text = fetch_transcript(video_id)
+            transcript_text = fetch_transcript(video_id)  # progress bar handled inside function
+
             if transcript_text:
-                st.success("Transcript fetched successfully.")
-                with st.expander("Transcript Preview"):
-                    st.text_area("Transcript", transcript_text[:4000], height=250, key="transcript_preview")
-
-                embed_code = f"""
-                <div class="video-container">
-                    <div class="video-wrapper">
-                        <iframe
-                            src="https://www.youtube.com/embed/{video_id}"
-                            frameborder="0"
-                            allowfullscreen>
-                        </iframe>
-                    </div>
-                </div>
-                """
-                st.markdown(embed_code, unsafe_allow_html=True)
-
-                # # Embed YouTube video
-                # embed_code = f"""
-                # <iframe width="700" height="450"
-                # src="https://www.youtube.com/embed/{video_id}"
-                # frameborder="0" allowfullscreen>
-                # </iframe>
-                # """
-                # st.markdown(embed_code, unsafe_allow_html=True)
+                expander_content.write(transcript_text[:4000])  # first 4000 chars preview
             else:
-                st.error("Could not fetch transcript.")
-                return
+                expander_content.write("No transcript available for this video.")
+
         else:
             st.error("Invalid YouTube URL.")
-            return
 
-    # FALLBACK: use pasted transcript text
-    elif quick_text.strip():
+    # ===============================
+    # Manual Transcript Input
+    # ===============================
+    quick_text = st.text_area(
+        "Or paste transcript text here:",
+        height=150,
+        help="Paste transcript text directly if you don’t want to use a URL."
+    )
+
+    if not transcript_text and quick_text.strip():
         transcript_text = quick_text
+        expander_content.write(transcript_text[:4000])  # preview manual transcript
 
-    else:
-        st.info("Paste text or YouTube link above to begin analysis.")
-        return
+    # ===============================
+    # YouTube Embed
+    # ===============================
+    if video_id:
+        embed_code = f"""
+        <div class="video-container">
+            <div class="video-wrapper">
+                <iframe
+                    src="https://www.youtube.com/embed/{video_id}"
+                    frameborder="0"
+                    allowfullscreen>
+                </iframe>
+            </div>
+        </div>
+        """
+        st.markdown(embed_code, unsafe_allow_html=True)
+
+    if not transcript_text:
+        st.info("Paste a YouTube URL above or enter transcript text to begin analysis.")
 
 
-    # if quick_text.strip():
-    #     if "youtube.com" in quick_text or "youtu.be" in quick_text or len(quick_text.strip()) == 11:
-    #         video_id = get_video_id(quick_text.strip())
-    #         if video_id:
-    #             st.info(f"Fetching transcript for video ID: `{video_id}` ...")
-    #             transcript_text = fetch_transcript(video_id)
-    #             if transcript_text:
-    #                 st.success("Transcript fetched successfully.")
-    #                 with st.expander("Transcript Preview"):
-    #                     st.text_area("Transcript", transcript_text[:4000], height=250, key="transcript_preview")
-    #             else:
-    #                 st.error("Could not fetch transcript.")
-    #                 return
-    #         else:
-    #             st.error("Invalid YouTube URL or video ID.")
-    #             return
-    #     else:
-    #         transcript_text = quick_text
-    # else:
-    #     st.info("Paste text or YouTube link above to begin analysis.")
-    #     return
 
     text_to_analyze = transcript_text or quick_text
     paragraphs = segment_text(
@@ -341,11 +306,47 @@ def main():
     fake_duration = max(len(text_to_analyze) // 10, 10)
     timestamps = assign_timestamps(paragraphs)
 
+ 
     # ======================================================
-    # Run model inference and create analysis DataFrame
+    # Run model inference 
     # ======================================================
     predictions = run_inference(classifier, paragraphs)
 
+    st.markdown("---")
+
+
+
+    # ======================================================
+    # Segment Transcript
+    # ======================================================
+    st.subheader("View Transcript Segments")
+
+    st.write(f"Text split into {len(paragraphs)} segments (max {max_chars} chars each)")
+
+    with st.expander("View All Segments"):
+        df_paragraphs = pd.DataFrame({
+            "Segment #": list(range(1, len(paragraphs) + 1)),
+            "Text": paragraphs
+        })
+        st.dataframe(df_paragraphs, use_container_width=True)
+
+
+
+    st.markdown("---")
+    
+    # ======================================================
+    # Summary Metrics
+    # ======================================================
+    # st.subheader("Quick Analysis Summary")
+    # col1, col2, col3 = st.columns(3)
+    # col1.metric("Paragraphs", len(paragraphs))
+    # col2.metric("Average Score", f"{scores.mean():.3f}")
+    # col3.metric("Peak Score", f"{scores.max():.3f}")
+
+
+    # ======================================================
+    # Create analysis DataFrame
+    # ======================================================
     analysis_df = create_analysis_df(
         paragraphs=paragraphs,
         timestamps=timestamps,
@@ -358,19 +359,247 @@ def main():
     st.session_state["fear_results_df"] = analysis_df
     st.session_state["video_duration_seconds"] = fake_duration
 
-    st.write(f"Text split into {len(paragraphs)} paragraphs (max {max_chars} chars each)")
 
+    # ======================================================
+    # Get Timestamps and Fear Scores
+    # ======================================================
     seconds = timestamps["seconds"]
     scores = analysis_df["Fear Mongering Score"]
 
+
+    # # ======================================================
+    # # Fear Analysis Summary
+    # # ======================================================
+    # st.subheader("Quick Analysis Summary")
+
+    # col1, col2, col3, col4 = st.columns(4)
+
+    # avg_score = scores.mean()
+    # max_score = scores.max()
+    # min_score = scores.min()
+    # high_risk_count = len(analysis_df[analysis_df["Fear Mongering Score"] >= threshold])
+    # percentage = (high_risk_count / len(paragraphs)) * 100
+
+    # with col1:
+    #     st.metric("Paragraphs", len(paragraphs))
+
+    # with col2:
+    #     st.metric(
+    #         "Average Score",
+    #         f"{avg_score:.3f}",
+    #         delta=f"{((avg_score - threshold) * 100):.0f}% vs threshold",
+    #         delta_color="inverse"
+    #     )
+
+    # with col3:
+    #     st.metric(
+    #         "Peak Score",
+    #         f"{max_score:.3f}",
+    #         delta=f"Low: {min_score:.3f}"
+    #     )
+
+    # with col4:
+    #     st.metric(
+    #         "High Risk",
+    #         f"{high_risk_count}",
+    #         delta=f"{percentage:.1f}% of talk"
+    #     )
+
+
+
+    # # ======================================================
+    # # Overall Assessment with More Context
+    # # ======================================================
+    # st.subheader("Overall Assessment")
+    # assessment_col1, assessment_col2 = st.columns([2, 1])
+
+    # with assessment_col1:
+    #     if avg_score >= threshold:
+    #         st.markdown(f'<div class="theme-status-box error">'
+    #                     f"### High Fear Mongering Detected<br>"
+    #                     f"- Average score: **{avg_score:.3f}** (threshold: {threshold:.2f})<br>"
+    #                     f"- **{high_risk_count}** of {len(paragraphs)} paragraphs exceed threshold<br>"
+    #                     f"- Peak fear score: **{max_score:.3f}**"
+    #                     f"</div>", unsafe_allow_html=True)
+
+    #     elif avg_score >= 0.5:
+    #         st.markdown(f'<div class="theme-status-box warning">'
+    #                     f"### Moderate Concern<br>"
+    #                     f"- Average score: **{avg_score:.3f}** (threshold: {threshold:.2f})<br>"
+    #                     f"- **{high_risk_count}** segments above threshold<br>"
+    #                     f"- Approaching concerning levels"
+    #                     f"</div>", unsafe_allow_html=True)
+
+    #     else:
+    #         st.markdown(f'<div class="theme-status-box success">'
+    #                     f"### Low Risk Content<br>"
+    #                     f"- Average score: **{avg_score:.3f}** (well below {threshold:.2f})<br>"
+    #                     f"- Only **{high_risk_count}** high-risk segments<br>"
+    #                     f"- Generally balanced messaging"
+    #                     f"</div>", unsafe_allow_html=True)
+
+    # with assessment_col2:
+    #     # st.markdown("#### Distribution")
+
+    #     low = len(analysis_df[analysis_df["Fear Mongering Score"] < 0.5])
+
+    #     medium = len(analysis_df[(analysis_df["Fear Mongering Score"] >= 0.5) &
+    #                             (analysis_df["Fear Mongering Score"] < threshold)])
+        
+    #     high = len(analysis_df[analysis_df["Fear Mongering Score"] >= threshold])
+
+    #     # Create DataFrame for distribution
+
+    #     dist_df = pd.DataFrame({
+    #         "Category": ["Low", "Medium", "High"],
+    #         "Count": [low, medium, high]
+    #     })
+
+    #     fig = px.pie(
+    #     dist_df,
+    #     names="Category",
+    #     values="Count",
+    #     color="Category",
+    #     color_discrete_map={
+    #         "Low": "#4FC3F7",      # Blue
+    #         "Medium": "#FFD54F",   # Yellow
+    #         "High": "#EF5350"      # Red
+    #     },
+    #     # hole=0.1
+    #     )
+
+    #     fig.update_traces(
+    #         textinfo="percent+label",
+    #         hoverinfo="label+percent+value",
+    #         marker=dict(line=dict(color="#0D1526", width=0))
+    #     )
+
+    #     fig.update_layout(
+    #         height=200,  # match column height
+    #         margin=dict(l=0, r=0, t=0, b=0),
+    #         showlegend=False,  # removes legend
+    #         title_text=None,   # removes title
+    #         plot_bgcolor="#0D1526",
+    #         paper_bgcolor="#0D1526",
+    #     )
+
+    #     st.plotly_chart(fig, use_container_width=True)
+
+    #     st.markdown("---")
+
     # ======================================================
-    # Summary Metrics
+    # Fear Analysis Summary
     # ======================================================
     st.subheader("Quick Analysis Summary")
-    col1, col2, col3 = st.columns(3)
-    col1.metric("Paragraphs", len(paragraphs))
-    col2.metric("Average Score", f"{scores.mean():.3f}")
-    col3.metric("Peak Score", f"{scores.max():.3f}")
+
+    col1, col2 = st.columns([2, 1], gap="small")  # Main column + pie chart column
+
+    with col1:
+        avg_score = scores.mean()
+        max_score = scores.max()
+        min_score = scores.min()
+        high_risk_count = len(analysis_df[analysis_df["Fear Mongering Score"] >= threshold])
+        percentage = (high_risk_count / len(paragraphs)) * 100
+
+        # Quick stats
+        stats_col1, stats_col2, stats_col3, stats_col4 = st.columns(4)
+
+        with stats_col1:
+            st.metric("Paragraphs", len(paragraphs))
+
+        with stats_col2:
+            st.metric(
+                "Average Score",
+                f"{avg_score:.3f}",
+                delta=f"{((avg_score - threshold) * 100):.0f}% vs threshold",
+                delta_color="inverse"
+            )
+
+        with stats_col3:
+            st.metric(
+                "Peak Score",
+                f"{max_score:.3f}",
+                delta=f"Low: {min_score:.3f}"
+            )
+
+        with stats_col4:
+            st.metric(
+                "High Risk",
+                f"{high_risk_count}",
+                delta=f"{percentage:.1f}% of talk"
+            )
+
+        st.markdown("---")
+
+        # Overall Assessment
+        st.subheader("Overall Assessment")
+
+        if avg_score >= threshold:
+            st.markdown(f'<div class="theme-status-box error">'
+                        f"### High Fear Mongering Detected<br>"
+                        f"- Average score: **{avg_score:.3f}** (threshold: {threshold:.2f})<br>"
+                        f"- **{high_risk_count}** of {len(paragraphs)} paragraphs exceed threshold<br>"
+                        f"- Peak fear score: **{max_score:.3f}**"
+                        f"</div>", unsafe_allow_html=True)
+
+        elif avg_score >= 0.5:
+            st.markdown(f'<div class="theme-status-box warning">'
+                        f"### Moderate Concern<br>"
+                        f"- Average score: **{avg_score:.3f}** (threshold: {threshold:.2f})<br>"
+                        f"- **{high_risk_count}** segments above threshold<br>"
+                        f"- Approaching concerning levels"
+                        f"</div>", unsafe_allow_html=True)
+
+        else:
+            st.markdown(f'<div class="theme-status-box success">'
+                        f"### Low Risk Content<br>"
+                        f"- Average score: **{avg_score:.3f}** (well below {threshold:.2f})<br>"
+                        f"- Only **{high_risk_count}** high-risk segments<br>"
+                        f"- Generally balanced messaging"
+                        f"</div>", unsafe_allow_html=True)
+
+    with col2:
+        st.markdown('<div style="margin-top:-5px; padding-top:0;"><h5 style="margin-bottom:5px;">Distribution</h5></div>', unsafe_allow_html=True)
+        # Pie chart
+        low = len(analysis_df[analysis_df["Fear Mongering Score"] < 0.5])
+        medium = len(analysis_df[(analysis_df["Fear Mongering Score"] >= 0.5) &
+                                (analysis_df["Fear Mongering Score"] < threshold)])
+        high = len(analysis_df[analysis_df["Fear Mongering Score"] >= threshold])
+
+        dist_df = pd.DataFrame({
+            "Category": ["Low", "Medium", "High"],
+            "Count": [low, medium, high]
+        })
+
+        fig = px.pie(
+            dist_df,
+            names="Category",
+            values="Count",
+            color="Category",
+            color_discrete_map={
+                "Low": "#4FC3F7",
+                "Medium": "#FFD54F",
+                "High": "#EF5350"
+            }
+        )
+
+        fig.update_traces(
+            textinfo="percent+label",
+            hoverinfo="label+percent+value",
+            marker=dict(line=dict(color="#0D1526", width=0))
+        )
+
+        fig.update_layout(
+            height=320,  # make pie chart height match nicely
+            margin=dict(l=10, r=10, t=0, b=0),
+            showlegend=False,
+            plot_bgcolor="#0D1526",
+            paper_bgcolor="#0D1526"
+        )
+
+        st.plotly_chart(fig, use_container_width=True)
+
+    st.markdown("---")
 
     # ======================================================
     # Chart
@@ -395,8 +624,6 @@ def main():
     )
 
  
-
-
     # ======================================================
     # FITBIT HEART RATE DATA
     # ======================================================
@@ -441,36 +668,6 @@ def main():
                 st.session_state.pop(key, None)
             st.rerun()
 
-    # fitbit_date = st.date_input("Select date for Fitbit data", key="fitbit_date_input")
-
-    # Sidebar controls
-    # if st.button("Load Fitbit Heart Data", key="load_fitbit_btn"):
-    #     with st.spinner("Fetching Fitbit data..."):
-    #         df, date_str, error = get_fitbit_heart_data(fitbit_date.strftime("%Y-%m-%d"))
-    #         if error:
-    #             st.error(error)
-    #         else:
-    #             # Store in session state
-    #             st.session_state["fitbit_data"] = df
-    #             st.session_state["fitbit_date"] = date_str
-    #             st.session_state["fitbit_fig"] = plot_fitbit_heart(df, date_str)
-    #             st.rerun()
-
-
-    # # Display the figure if it exists in session state
-    # if "fitbit_fig" in st.session_state:
-    #     st.success(f"Fitbit heart rate data loaded for {st.session_state['fitbit_date']}")
-    #     st.plotly_chart(st.session_state["fitbit_fig"], use_container_width=True)
-
-
-    #     # Optional: Add a clear button
-    #     if st.button("Clear Fitbit Data", key="clear_fitbit_btn"):
-    #         del st.session_state["fitbit_fig"]
-    #         del st.session_state["fitbit_data"]
-    #         del st.session_state["fitbit_date"]
-    #         st.rerun()
-
-    
 
 
     st.write("---") 
