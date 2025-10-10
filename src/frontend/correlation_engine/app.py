@@ -1,4 +1,3 @@
-
 from datetime import datetime, timedelta
 import pandas as pd
 from pathlib import Path
@@ -7,10 +6,14 @@ import streamlit as st
 import pytz
 import nltk
 import plotly.express as px
+
+# === MODEL LOADING ===
 from backend.fear_monger_processor.model import load_classifier
 from backend.fear_monger_processor.inference import run_inference
 from backend.fear_monger_processor.transcript import get_video_id, fetch_transcript
 from backend.fear_monger_processor.utils import segment_text, assign_timestamps, create_analysis_df, create_plotly_chart, display_results_table
+
+# === CONFIG & UTILITIES ===
 from frontend.correlation_engine.config import MAX_CHARS, DEFAULT_FEAR_THRESHOLD, DEFAULT_SMOOTHING_WINDOW, DEFAULT_CHART_TYPE
 from backend.fitbit_app.fitbit_utils import get_fitbit_heart_data, plot_fitbit_heart
 from backend.fitbit_app.fitbit_client import fetch_fitbit_data
@@ -18,6 +21,7 @@ from backend.fitbit_app.aligner import align_fear_and_heart
 from backend.fitbit_app.playback_window import estimate_playback_window
 from backend.fitbit_app.config import TOKEN_FILE
 from backend.ted_talks_app.data_loader import load_transcripts
+
 base_dir = Path(__file__).resolve().parents[2]
 
 def load_css(file_path):
@@ -27,15 +31,19 @@ def load_css(file_path):
 
 def main():
 
+    # === Load Styles ===
     load_css("styles.css")
 
+    # === Ensure NLP dependencies ===
     try:
         nltk.data.find("tokenizers/punkt")
     except LookupError:
-        nltk.download("punkt")
+        nltk.download("punkt")  # Needed for sentence segmentation
 
-
+    # === Load Classifier Model ===
     if "classifier" not in st.session_state:
+
+        # Only load once — stored in session_state for efficiency
         with st.spinner("Loading fear detection model..."):
             st.session_state.classifier = load_classifier()
 
@@ -43,19 +51,14 @@ def main():
 
   
     # ======================================================
-    # STREAMLIT UI
+    # UI SETUP
     # ======================================================
-
     st.title("Fear Sensor")
 
     # ======================================================
     # Segmentation Settings
     # ======================================================
-
-    with st.sidebar.expander("Segmentation Options", expanded=False):
-
-        # st.sidebar.header("Segmentation Settings")
-
+    with st.sidebar.expander("Select Fear Threshold ", expanded=False):
         segment_mode = st.radio(
             "Segment text by:",
             ["Characters", "Sentences", "Both"],
@@ -87,7 +90,7 @@ def main():
             )
 
         # ======================================================
-        # Threshold Settings
+        # Fear Threshold Settings
         # ======================================================
         threshold = st.slider(
             "Fear Mongering Threshold",
@@ -98,12 +101,6 @@ def main():
             help="Adjust the threshold for analysis."
         )
 
-
-    
-    # ======================================================
-    # Advanced Options
-    # ======================================================
-    with st.sidebar.expander("Advanced Options", expanded=False):
         smoothing_window = st.slider(
             "Smoothing Window Size",
             min_value=1,
@@ -113,6 +110,11 @@ def main():
             help="Larger window smooths the fear mongering score more."
         )
 
+
+    # ======================================================
+    # Chart Options
+    # ======================================================
+    with st.sidebar.expander("Chart Options", expanded=False):
         chart_type = st.selectbox(
             "Chart Type",
             ["Line Chart", "Bar Chart", "Area Chart"],
@@ -130,33 +132,18 @@ def main():
         )
 
     # ======================================================
-    # Load Model
-    # ======================================================
-    # classifier = load_classifier()
-
-    # ======================================================
-    # Text Input
-    # ======================================================
-
-
-
-    # ======================================================
-    # Ted Talks
+    # TED Talks Loading
     # ======================================================
     with st.sidebar.expander("TED Talks", expanded=False):
         df = load_transcripts()
-
-        # st.subheader("TED Talks")
 
         if df.empty:
             st.error("Failed to load transcript data. Please check your data files.")
             return
         
         st.header("Talk Selection")
-    # ============================================
+
         # Sorting and Paging
-        # ============================================
-        # Sorting
         sort_option = st.selectbox(
             "Sort talks by:",
             ["title", "views", "published_date", "duration"],
@@ -178,11 +165,6 @@ def main():
         start = (page - 1) * chunk_size
         end = min(start + chunk_size, len(df_sorted))
 
-        # st.sidebar.caption(f"Showing talks {start}–{end - 1} of {len(df_sorted)} total")
-
-        # Talk selection within the current page
-
-
         talk_index = st.slider(
             f"Select talk (in page {page})",
             min_value=0,
@@ -192,12 +174,10 @@ def main():
         
         selected_row = df_sorted.iloc[start + talk_index]
 
-        # Metadata summary
+        # Display talk metadata
         st.markdown(f"**Title:** {selected_row['title']}")
         st.markdown(f"**Speaker:** {selected_row['main_speaker']}")
         st.markdown(f"**URL:** [{selected_row['url']}]({selected_row['url']})")
-
-        # with st.expander("More details"):
         st.markdown(f"**Description:** {selected_row.get('description', 'N/A')}")
         st.markdown(f"**Published Date:** {selected_row.get('published_date', 'N/A')}")
         st.markdown(f"**Views:** {selected_row.get('views', 'N/A')}")
@@ -225,8 +205,7 @@ def main():
             help="Uncheck to show only high-scoring paragraphs"
         )
         
-        st.sidebar.markdown("---")
-        
+    
 
     # ===============================
     # YouTube URL Input
@@ -262,7 +241,7 @@ def main():
     # ===============================
     quick_text = st.text_area(
         "Or paste transcript text here:",
-        height=150,
+        height=100,
         help="Paste transcript text directly if you don’t want to use a URL."
     )
 
@@ -291,7 +270,9 @@ def main():
         st.info("Paste a YouTube URL above or enter transcript text to begin analysis.")
 
 
-
+    # ========================
+    # Text segmentation
+    # ========================
     text_to_analyze = transcript_text or quick_text
     paragraphs = segment_text(
         text_to_analyze,
@@ -306,14 +287,15 @@ def main():
     fake_duration = max(len(text_to_analyze) // 10, 10)
     timestamps = assign_timestamps(paragraphs)
 
- 
-    # ======================================================
-    # Run model inference 
-    # ======================================================
+
+    # ========================
+    # RUN INFERENCE
+    # ========================
+    # This is the core model execution step.
+    # It only runs when there is new transcript data.
     predictions = run_inference(classifier, paragraphs)
 
     st.markdown("---")
-
 
 
     # ======================================================
@@ -330,18 +312,7 @@ def main():
         })
         st.dataframe(df_paragraphs, use_container_width=True)
 
-
-
     st.markdown("---")
-    
-    # ======================================================
-    # Summary Metrics
-    # ======================================================
-    # st.subheader("Quick Analysis Summary")
-    # col1, col2, col3 = st.columns(3)
-    # col1.metric("Paragraphs", len(paragraphs))
-    # col2.metric("Average Score", f"{scores.mean():.3f}")
-    # col3.metric("Peak Score", f"{scores.max():.3f}")
 
 
     # ======================================================
@@ -366,130 +337,9 @@ def main():
     seconds = timestamps["seconds"]
     scores = analysis_df["Fear Mongering Score"]
 
-
-    # # ======================================================
-    # # Fear Analysis Summary
-    # # ======================================================
-    # st.subheader("Quick Analysis Summary")
-
-    # col1, col2, col3, col4 = st.columns(4)
-
-    # avg_score = scores.mean()
-    # max_score = scores.max()
-    # min_score = scores.min()
-    # high_risk_count = len(analysis_df[analysis_df["Fear Mongering Score"] >= threshold])
-    # percentage = (high_risk_count / len(paragraphs)) * 100
-
-    # with col1:
-    #     st.metric("Paragraphs", len(paragraphs))
-
-    # with col2:
-    #     st.metric(
-    #         "Average Score",
-    #         f"{avg_score:.3f}",
-    #         delta=f"{((avg_score - threshold) * 100):.0f}% vs threshold",
-    #         delta_color="inverse"
-    #     )
-
-    # with col3:
-    #     st.metric(
-    #         "Peak Score",
-    #         f"{max_score:.3f}",
-    #         delta=f"Low: {min_score:.3f}"
-    #     )
-
-    # with col4:
-    #     st.metric(
-    #         "High Risk",
-    #         f"{high_risk_count}",
-    #         delta=f"{percentage:.1f}% of talk"
-    #     )
-
-
-
-    # # ======================================================
-    # # Overall Assessment with More Context
-    # # ======================================================
-    # st.subheader("Overall Assessment")
-    # assessment_col1, assessment_col2 = st.columns([2, 1])
-
-    # with assessment_col1:
-    #     if avg_score >= threshold:
-    #         st.markdown(f'<div class="theme-status-box error">'
-    #                     f"### High Fear Mongering Detected<br>"
-    #                     f"- Average score: **{avg_score:.3f}** (threshold: {threshold:.2f})<br>"
-    #                     f"- **{high_risk_count}** of {len(paragraphs)} paragraphs exceed threshold<br>"
-    #                     f"- Peak fear score: **{max_score:.3f}**"
-    #                     f"</div>", unsafe_allow_html=True)
-
-    #     elif avg_score >= 0.5:
-    #         st.markdown(f'<div class="theme-status-box warning">'
-    #                     f"### Moderate Concern<br>"
-    #                     f"- Average score: **{avg_score:.3f}** (threshold: {threshold:.2f})<br>"
-    #                     f"- **{high_risk_count}** segments above threshold<br>"
-    #                     f"- Approaching concerning levels"
-    #                     f"</div>", unsafe_allow_html=True)
-
-    #     else:
-    #         st.markdown(f'<div class="theme-status-box success">'
-    #                     f"### Low Risk Content<br>"
-    #                     f"- Average score: **{avg_score:.3f}** (well below {threshold:.2f})<br>"
-    #                     f"- Only **{high_risk_count}** high-risk segments<br>"
-    #                     f"- Generally balanced messaging"
-    #                     f"</div>", unsafe_allow_html=True)
-
-    # with assessment_col2:
-    #     # st.markdown("#### Distribution")
-
-    #     low = len(analysis_df[analysis_df["Fear Mongering Score"] < 0.5])
-
-    #     medium = len(analysis_df[(analysis_df["Fear Mongering Score"] >= 0.5) &
-    #                             (analysis_df["Fear Mongering Score"] < threshold)])
-        
-    #     high = len(analysis_df[analysis_df["Fear Mongering Score"] >= threshold])
-
-    #     # Create DataFrame for distribution
-
-    #     dist_df = pd.DataFrame({
-    #         "Category": ["Low", "Medium", "High"],
-    #         "Count": [low, medium, high]
-    #     })
-
-    #     fig = px.pie(
-    #     dist_df,
-    #     names="Category",
-    #     values="Count",
-    #     color="Category",
-    #     color_discrete_map={
-    #         "Low": "#4FC3F7",      # Blue
-    #         "Medium": "#FFD54F",   # Yellow
-    #         "High": "#EF5350"      # Red
-    #     },
-    #     # hole=0.1
-    #     )
-
-    #     fig.update_traces(
-    #         textinfo="percent+label",
-    #         hoverinfo="label+percent+value",
-    #         marker=dict(line=dict(color="#0D1526", width=0))
-    #     )
-
-    #     fig.update_layout(
-    #         height=200,  # match column height
-    #         margin=dict(l=0, r=0, t=0, b=0),
-    #         showlegend=False,  # removes legend
-    #         title_text=None,   # removes title
-    #         plot_bgcolor="#0D1526",
-    #         paper_bgcolor="#0D1526",
-    #     )
-
-    #     st.plotly_chart(fig, use_container_width=True)
-
-    #     st.markdown("---")
-
-    # ======================================================
-    # Fear Analysis Summary
-    # ======================================================
+    # ========================
+    # Summary & Visualization
+    # ========================
     st.subheader("Quick Analysis Summary")
 
     col1, col2 = st.columns([2, 1], gap="small")  # Main column + pie chart column
@@ -601,19 +451,24 @@ def main():
 
     st.markdown("---")
 
-    # ======================================================
+    # =======================
     # Chart
-    # ======================================================
+    # =======================
     st.subheader("Fear Mongering Trend")
     fig = create_plotly_chart(seconds, scores, paragraphs, chart_type=chart_type, max_hover_length=max_hover_length)
     st.plotly_chart(fig, use_container_width=True)
 
+
+    # =======================
+    # Table analysis
+    # =======================
     st.subheader("Paragraph-Level Analysis")
     display_results_table(analysis_df, threshold)
 
-    # ======================================================
-    # Table & CSV Download
-    # ======================================================
+
+    # ========================
+    # DOWNLOAD RESULTS
+    # ========================
     csv = analysis_df.to_csv(index=False).encode("utf-8")
     st.download_button(
         "Download Results as CSV",
@@ -625,7 +480,7 @@ def main():
 
  
     # ======================================================
-    # FITBIT HEART RATE DATA
+    # FITBIT HEART RATE DATA LOADING
     # ======================================================
     st.write("---") 
     # with st.expander("Fitbit Heart Rate Data", expanded=False):
@@ -668,13 +523,13 @@ def main():
                 st.session_state.pop(key, None)
             st.rerun()
 
-
-
     st.write("---") 
+
+    
     # ======================================================
     # COMPARE FEAR RATING WITH HEART RATE
     # ======================================================
-    st.header("Compare Fear Rating with Heart Rate")
+    st.header("Fear vs. Heart Rate Analysis")
 
     # User-selectable start time
     col1, col2 = st.columns(2)

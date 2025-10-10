@@ -2,6 +2,10 @@
 
 This project demonstrates how to detect **fear-mongering in video transcripts** and correlate it with **biometric stress signals** (e.g., heart rate, HRV, EDA) collected from wearables such as Fitbit, Apple Health, or Google Fit.
 
+<p align="center">
+  <img src="assets/falsconai-fear-sensor.png" alt="Fear Analysis" width="500" style="border: 2px solid #d3d3d3; border-radius: 10px;"/>
+</p>
+
 ---
 
 ## Features
@@ -16,11 +20,17 @@ This project demonstrates how to detect **fear-mongering in video transcripts** 
 
 ## Architecture
 
-```
+<!-- ```
 Video Transcript → NLP Fear Score → Alignment → Analytics → Visualization
                     ↑                        ↑
         Biometrics (Fitbit/Apple/Google/CSV) │
-```
+``` -->
+
+<!-- ![Alt text](assets/architecture_diagram-v1.jpg) -->
+
+<p align="center">
+  <img src="assets/architecture_diagram-v1.jpg" alt="Architecture Diagram" style="width:75%;"/>
+</p>
 
 * **Backend**: FastAPI + Celery for async processing
 * **Storage**: Postgres/TimescaleDB + MinIO (object storage)
@@ -34,6 +44,12 @@ Video Transcript → NLP Fear Score → Alignment → Analytics → Visualizatio
 * Fear intensity timeline with highlighted transcript segments.
 * Overlay of heart rate/HRV against fear spikes.
 * Lagged cross-correlation plots to see if fear spikes precede stress responses.
+
+<!-- ![Alt text](assets/fear-analysis.png) -->
+
+<p align="center">
+  <img src="assets/fear-analysis.png" alt="Fear Analysis" width="450" style="border: 2px solid #d3d3d3; border-radius: 10px;"/>
+</p>
 
 ---
 

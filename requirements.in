@@ -14,6 +14,7 @@ mpmath
 networkx
 attrs
 packaging
+matplotlib
 
 # --- API & Backend Framework ---
 click
@@ -27,6 +28,10 @@ charset-normalizer
 idna
 certifi
 urllib3
+GitPython
+gitdb
+smmap
+toml
 
 # --- Machine Learning & NLP ---
 transformers
@@ -41,12 +46,11 @@ jsonschema
 jsonschema-specifications
 referencing
 rpds-py
-toml
-smmap
-GitPython
-gitdb
 hf-xet
 narwhals
+
+# Local editable install of this project
+-e .
 
 # --- Utilities ---
 six
@@ -57,4 +61,6 @@ tqdm
 streamlit
 pydeck
 altair
-Pillow
+pillow
+streamlit-aggrid
+plotly

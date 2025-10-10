@@ -41,5 +41,5 @@ def plot_fitbit_heart(df, date_str):
         title=f"Intraday Heart Rate - {date_str}",
         labels={"datetime": "Time", "value": "Heart Rate (bpm)"}
     )
-    fig.update_traces(line=dict(color="red"))
+    fig.update_traces(line=dict(color="orange"))
     return fig
