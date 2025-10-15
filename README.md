@@ -3,7 +3,7 @@
 This project demonstrates how to detect **fear-mongering in video transcripts** and correlate it with **biometric stress signals** (e.g., heart rate, HRV, EDA) collected from wearables such as Fitbit, Apple Health, or Google Fit.
 
 <p align="center">
-  <img src="assets/falsconai-fear-sensor.png" alt="Fear Analysis" width="500" style="border: 2px solid #d3d3d3; border-radius: 10px;"/>
+  <img src="assets/falsconai-fear-sensor.png" alt="Fear Analysis" width="600" style="border: 2px solid #d3d3d3; border-radius: 10px;"/>
 </p>
 
 ---
