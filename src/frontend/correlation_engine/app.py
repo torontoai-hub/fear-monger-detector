@@ -1,46 +1,82 @@
-from datetime import datetime, timedelta
-import pandas as pd
-from pathlib import Path
-import matplotlib.pyplot as plt
-import streamlit as st
-import pytz
-import nltk
-import plotly.express as px
+"""
+Fear Sensor - Streamlit Application
+====================================
+This app analyzes video transcripts (YouTube or manual input) to detect fear-mongering
+content using machine learning, and optionally correlates findings with Fitbit heart rate data.
+
+Key Features:
+- YouTube transcript fetching and analysis
+- Fear-mongering detection using a pre-trained classifier
+- Text segmentation by characters/sentences
+- Interactive visualizations (line, bar, area charts)
+- Fitbit heart rate data integration
+- Time-based alignment of fear scores with physiological data
+"""
+
+# ======================================================
+# IMPORTS
+# ======================================================
+from datetime import datetime, timedelta        # Handling dates & times
+import pandas as pd                            # Data manipulation
+from pathlib import Path                        # File system paths
+import matplotlib.pyplot as plt                # Plotting (not heavily used)
+import streamlit as st                          # Web app interface
+import pytz                                    # Time zone handling
+import nltk                                    # NLP for text segmentation
+import plotly.express as px                     # Interactive charts
 
 # === MODEL LOADING ===
-from backend.fear_monger_processor.model import load_classifier
-from backend.fear_monger_processor.inference import run_inference
-from backend.fear_monger_processor.transcript import get_video_id, fetch_transcript
-from backend.fear_monger_processor.utils import segment_text, assign_timestamps, create_analysis_df, create_plotly_chart, display_results_table
+from backend.fear_monger_processor.model import load_classifier       # Load fear model
+from backend.fear_monger_processor.inference import run_inference    # Run inference on text
+from backend.fear_monger_processor.transcript import get_video_id, fetch_transcript  # TED/YouTube transcripts
+from backend.fear_monger_processor.utils import segment_text, assign_timestamps, create_analysis_df, create_plotly_chart, display_results_table  # Utils for text, chart, dataframe
 
 # === CONFIG & UTILITIES ===
 from frontend.correlation_engine.config import MAX_CHARS, DEFAULT_FEAR_THRESHOLD, DEFAULT_SMOOTHING_WINDOW, DEFAULT_CHART_TYPE
 from backend.fitbit_app.fitbit_utils import get_fitbit_heart_data, plot_fitbit_heart
 from backend.fitbit_app.fitbit_client import fetch_fitbit_data
-from backend.fitbit_app.aligner import align_fear_and_heart
+from backend.fitbit_app.aligner import align_fear_and_heart # Align fear vs heart rate
 from backend.fitbit_app.playback_window import estimate_playback_window
 from backend.fitbit_app.config import TOKEN_FILE
-from backend.ted_talks_app.data_loader import load_transcripts
+from backend.ted_talks_app.data_loader import load_transcripts  # Load TED transcripts
 
+# Get base directory for relative path resolution
 base_dir = Path(__file__).resolve().parents[2]
 
+# ======================================================
+# CSS LOADING FUNCTION
+# ======================================================
 def load_css(file_path):
+    """
+    Load custom CSS styling for the Streamlit app.
+    
+    Args:
+        file_path: Path to CSS file
+    """
     with open(file_path) as f:
         st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
         
-
+# ======================================================
+# MAIN STREAMLIT APP FUNCTION
+# ======================================================
 def main():
+    """
+    Main application entry point.
+    Orchestrates the entire UI flow and data processing pipeline.
+    """
 
     # === Load Styles ===
     load_css("styles.css")
 
-    # === Ensure NLP dependencies ===
+     # === Ensure NLP dependencies ===
+    # Download NLTK punkt tokenizer if not present (needed for sentence segmentation)
     try:
         nltk.data.find("tokenizers/punkt")
     except LookupError:
-        nltk.download("punkt")  # Needed for sentence segmentation
+        nltk.download("punkt")
 
     # === Load Classifier Model ===
+    # Use session_state to cache the model - only load once per session
     if "classifier" not in st.session_state:
 
         # Only load once — stored in session_state for efficiency
@@ -56,9 +92,12 @@ def main():
     st.title("Fear Sensor")
 
     # ======================================================
-    # Segmentation Settings
+    # SIDEBAR: Segmentation Settings
     # ======================================================
+    # Allow users to control how text is chunked for analysis
     with st.sidebar.expander("Select Fear Threshold ", expanded=False):
+
+        # Segment text by Characters, Sentences, or Both
         segment_mode = st.radio(
             "Segment text by:",
             ["Characters", "Sentences", "Both"],
@@ -66,9 +105,11 @@ def main():
             help="Choose how to split the text into paragraphs for analysis."
         )
 
+        # Default values
         max_chars = MAX_CHARS
         max_sentences = 5
 
+        # Conditional UI: show character slider if relevant
         if segment_mode in ("Characters", "Both"):
             max_chars = st.slider(
                 "Maximum Characters per Segment",
@@ -79,6 +120,7 @@ def main():
                 help="Split the text once this many characters are reached."
             )
 
+        # Conditional UI: show sentence slider if relevant
         if segment_mode in ("Sentences", "Both"):
             max_sentences = st.slider(
                 "Maximum Sentences per Segment",
@@ -92,6 +134,7 @@ def main():
         # ======================================================
         # Fear Threshold Settings
         # ======================================================
+        # Set the threshold above which content is flagged as fear-mongering
         threshold = st.slider(
             "Fear Mongering Threshold",
             min_value=0.0,
@@ -101,6 +144,7 @@ def main():
             help="Adjust the threshold for analysis."
         )
 
+        # Smoothing reduces noise in the score timeline
         smoothing_window = st.slider(
             "Smoothing Window Size",
             min_value=1,
@@ -112,7 +156,7 @@ def main():
 
 
     # ======================================================
-    # Chart Options
+    # SIDEBAR: Chart Options
     # ======================================================
     with st.sidebar.expander("Chart Options", expanded=False):
         chart_type = st.selectbox(
@@ -122,6 +166,7 @@ def main():
             help="Choose how to display fear mongering trends."
         )
 
+        # Limit hover text length to prevent UI clutter
         max_hover_length = st.slider(
             "Max Hover Text Length",
             min_value=20,
@@ -132,7 +177,7 @@ def main():
         )
 
     # ======================================================
-    # TED Talks Loading
+    # SIDEBAR: TED Talks Database
     # ======================================================
     with st.sidebar.expander("TED Talks", expanded=False):
         df = load_transcripts()
@@ -153,7 +198,7 @@ def main():
 
         df_sorted = df.sort_values(by=sort_option, ascending=ascending_order).reset_index(drop=True)
 
-        # Paging
+        # Implement pagination for large dataset
         chunk_size = 50
         total_pages = (len(df_sorted) - 1) // chunk_size + 1
         page = st.number_input(
@@ -165,6 +210,7 @@ def main():
         start = (page - 1) * chunk_size
         end = min(start + chunk_size, len(df_sorted))
 
+        # Select specific talk within page
         talk_index = st.slider(
             f"Select talk (in page {page})",
             min_value=0,
@@ -188,8 +234,10 @@ def main():
 
         st.markdown("---")
         
+        # Sidebar settings for fear threshold and view options
         st.header("Analysis Settings")
         
+        # Duplicate threshold control
         threshold = st.slider(
             "Fear Mongering Threshold",
             min_value=0.0,
@@ -199,6 +247,7 @@ def main():
             help="Scores above this threshold are considered fear mongering"
         )
         
+        # Toggle to show all vs. only high-scoring paragraphs
         show_all_paragraphs = st.checkbox(
             "Show all paragraphs",
             value=True,
@@ -208,27 +257,30 @@ def main():
     
 
     # ===============================
-    # YouTube URL Input
+    # MAIN CONTENT: YouTube URL Input
     # ===============================
     url_input = st.text_input(
         "Enter YouTube URL:",
         help="Paste a YouTube video URL to fetch its transcript."
     )
 
-    # Create the expander immediately after URL input
+    # Create the expander immediately after URL input for transcript preview
     with st.expander("Transcript Preview"):
         expander_content = st.empty()
 
     transcript_text = None
     video_id = None
 
+    # Process YouTube URL if provided
     if url_input.strip():
         video_id = get_video_id(url_input.strip())
 
         if video_id:
+            # Fetch transcript using YouTube API/library
             transcript_text = fetch_transcript(video_id)  # progress bar handled inside function
 
             if transcript_text:
+                # Show preview (first 4000 characters)
                 expander_content.write(transcript_text[:4000])  # first 4000 chars preview
             else:
                 expander_content.write("No transcript available for this video.")
@@ -239,19 +291,22 @@ def main():
     # ===============================
     # Manual Transcript Input
     # ===============================
+    # Fallback option if user doesn't have a YouTube URL
     quick_text = st.text_area(
         "Or paste transcript text here:",
         height=100,
         help="Paste transcript text directly if you don’t want to use a URL."
     )
 
+    # Use manual text if no YouTube transcript was fetched
     if not transcript_text and quick_text.strip():
         transcript_text = quick_text
         expander_content.write(transcript_text[:4000])  # preview manual transcript
 
     # ===============================
-    # YouTube Embed
+    # YouTube Video Embed
     # ===============================
+    # Display the video inline if we have a valid video ID
     if video_id:
         embed_code = f"""
         <div class="video-container">
@@ -266,20 +321,24 @@ def main():
         """
         st.markdown(embed_code, unsafe_allow_html=True)
 
+    # Early exit if no transcript available
     if not transcript_text:
         st.info("Paste a YouTube URL above or enter transcript text to begin analysis.")
 
 
     # ========================
-    # Text segmentation
+    # TEXT SEGMENTATION
     # ========================
+    # Split transcript into analyzable chunks based on user settings
     text_to_analyze = transcript_text or quick_text
+
     paragraphs = segment_text(
         text_to_analyze,
         max_chars=max_chars if segment_mode in ("Characters", "Both") else float('inf'),
         max_sentences=max_sentences if segment_mode in ("Sentences", "Both") else float('inf')
     )
 
+    # Create fake timestamps based on text length (for visualization)
     if not paragraphs:
         st.warning("No paragraphs detected.")
         return
@@ -289,22 +348,22 @@ def main():
 
 
     # ========================
-    # RUN INFERENCE
+    # RUN ML INFERENCE
     # ========================
-    # This is the core model execution step.
-    # It only runs when there is new transcript data.
+    # Core model execution: classify each paragraph for fear-mongering
     predictions = run_inference(classifier, paragraphs)
 
     st.markdown("---")
 
 
     # ======================================================
-    # Segment Transcript
+    # Display Segmented Transcript
     # ======================================================
     st.subheader("View Transcript Segments")
 
     st.write(f"Text split into {len(paragraphs)} segments (max {max_chars} chars each)")
 
+    # Show all segments in expandable section
     with st.expander("View All Segments"):
         df_paragraphs = pd.DataFrame({
             "Segment #": list(range(1, len(paragraphs) + 1)),
@@ -318,6 +377,7 @@ def main():
     # ======================================================
     # Create analysis DataFrame
     # ======================================================
+    # Combine paragraphs, timestamps, predictions, and apply smoothing
     analysis_df = create_analysis_df(
         paragraphs=paragraphs,
         timestamps=timestamps,
@@ -326,32 +386,34 @@ def main():
         video_duration_seconds=fake_duration,
     )
 
-    # Save results for downstream correlation
+    # Store results in session state for downstream correlation with Fitbit
     st.session_state["fear_results_df"] = analysis_df
     st.session_state["video_duration_seconds"] = fake_duration
 
 
     # ======================================================
-    # Get Timestamps and Fear Scores
+    # Extract Time Series Data
     # ======================================================
     seconds = timestamps["seconds"]
     scores = analysis_df["Fear Mongering Score"]
 
     # ========================
-    # Summary & Visualization
+    # SUMMARY STATISTICS & VISUALIZATION
     # ========================
     st.subheader("Quick Analysis Summary")
 
+    # Two-column layout: stats + pie chart
     col1, col2 = st.columns([2, 1], gap="small")  # Main column + pie chart column
 
     with col1:
+        # Calculate key metrics
         avg_score = scores.mean()
         max_score = scores.max()
         min_score = scores.min()
         high_risk_count = len(analysis_df[analysis_df["Fear Mongering Score"] >= threshold])
         percentage = (high_risk_count / len(paragraphs)) * 100
 
-        # Quick stats
+        # Display metrics in 4-column grid
         stats_col1, stats_col2, stats_col3, stats_col4 = st.columns(4)
 
         with stats_col1:
@@ -362,7 +424,7 @@ def main():
                 "Average Score",
                 f"{avg_score:.3f}",
                 delta=f"{((avg_score - threshold) * 100):.0f}% vs threshold",
-                delta_color="inverse"
+                delta_color="inverse" # Red for higher scores
             )
 
         with stats_col3:
@@ -381,9 +443,12 @@ def main():
 
         st.markdown("---")
 
-        # Overall Assessment
+        # ======================================================
+        # Overall Assessment with Color-Coded Status
+        # ======================================================
         st.subheader("Overall Assessment")
 
+        # High risk: average score exceeds threshold
         if avg_score >= threshold:
             st.markdown(f'<div class="theme-status-box error">'
                         f"### High Fear Mongering Detected<br>"
@@ -392,6 +457,7 @@ def main():
                         f"- Peak fear score: **{max_score:.3f}**"
                         f"</div>", unsafe_allow_html=True)
 
+        # Moderate risk: score between 0.5 and threshold
         elif avg_score >= 0.5:
             st.markdown(f'<div class="theme-status-box warning">'
                         f"### Moderate Concern<br>"
@@ -400,6 +466,7 @@ def main():
                         f"- Approaching concerning levels"
                         f"</div>", unsafe_allow_html=True)
 
+        # Low risk: score below 0.5
         else:
             st.markdown(f'<div class="theme-status-box success">'
                         f"### Low Risk Content<br>"
@@ -409,8 +476,12 @@ def main():
                         f"</div>", unsafe_allow_html=True)
 
     with col2:
+        # ======================================================
+        # Pie Chart: Score Distribution
+        # ======================================================
         st.markdown('<div style="margin-top:-5px; padding-top:0;"><h5 style="margin-bottom:5px;">Distribution</h5></div>', unsafe_allow_html=True)
-        # Pie chart
+
+        # Categorize paragraphs into Low/Medium/High risk
         low = len(analysis_df[analysis_df["Fear Mongering Score"] < 0.5])
         medium = len(analysis_df[(analysis_df["Fear Mongering Score"] >= 0.5) &
                                 (analysis_df["Fear Mongering Score"] < threshold)])
@@ -421,15 +492,16 @@ def main():
             "Count": [low, medium, high]
         })
 
+        # Create pie chart with custom colors
         fig = px.pie(
             dist_df,
             names="Category",
             values="Count",
             color="Category",
             color_discrete_map={
-                "Low": "#4FC3F7",
-                "Medium": "#FFD54F",
-                "High": "#EF5350"
+                "Low": "#4FC3F7",     # Light blue
+                "Medium": "#FFD54F",  # Yellow
+                "High": "#EF5350"     # Red
             }
         )
 
@@ -452,7 +524,7 @@ def main():
     st.markdown("---")
 
     # =======================
-    # Chart
+    # INTERACTIVE TIME SERIES CHART
     # =======================
     st.subheader("Fear Mongering Trend")
     fig = create_plotly_chart(seconds, scores, paragraphs, chart_type=chart_type, max_hover_length=max_hover_length)
@@ -460,7 +532,7 @@ def main():
 
 
     # =======================
-    # Table analysis
+    # DETAILED TABLE ANALYSIS
     # =======================
     st.subheader("Paragraph-Level Analysis")
     display_results_table(analysis_df, threshold)
@@ -469,6 +541,7 @@ def main():
     # ========================
     # DOWNLOAD RESULTS
     # ========================
+    # Allow users to export analysis results
     csv = analysis_df.to_csv(index=False).encode("utf-8")
     st.download_button(
         "Download Results as CSV",
@@ -480,10 +553,9 @@ def main():
 
  
     # ======================================================
-    # FITBIT HEART RATE DATA LOADING
-    # ======================================================
+    # FITBIT INTEGRATION: Heart Rate Data Loading
+    # =========================================================
     st.write("---") 
-    # with st.expander("Fitbit Heart Rate Data", expanded=False):
     st.subheader("Fitbit Heart Rate Data")
 
     # Two columns for compact layout
@@ -500,7 +572,7 @@ def main():
         st.markdown("<br>", unsafe_allow_html=True)  # adds vertical padding
         load_data = st.button("Load Data", key="load_fitbit_btn")
 
-        # Button logic
+    # Load Fitbit data when button is clicked
     if load_data:
         with st.spinner("Fetching Fitbit data..."):
             df, date_str, error = get_fitbit_heart_data(fitbit_date.strftime("%Y-%m-%d"))
@@ -512,7 +584,7 @@ def main():
                 st.session_state["fitbit_fig"] = plot_fitbit_heart(df, date_str)
                 st.rerun()
 
-    # Display the figure if it exists
+    # Display the Fitbit chart if data exists in session
     if "fitbit_fig" in st.session_state:
         st.success(f"Fitbit heart rate data loaded for {st.session_state['fitbit_date']}")
         st.plotly_chart(st.session_state["fitbit_fig"], use_container_width=True)
@@ -527,14 +599,14 @@ def main():
 
     
     # ======================================================
-    # COMPARE FEAR RATING WITH HEART RATE
+    # CORRELATION ANALYSIS: Fear Score vs. Heart Rate
     # ======================================================
     st.header("Fear vs. Heart Rate Analysis")
 
-    # User-selectable start time
+    # User-selectable start time and duration
     col1, col2 = st.columns(2)
 
-    # Ensure fitbit_date is a date object
+    # Ensure fitbit_date is a date object (handle string conversion if needed)
     fitbit_date_value = st.session_state.get("fitbit_date")
     if isinstance(fitbit_date_value, str):
         fitbit_date = datetime.strptime(fitbit_date_value, "%Y-%m-%d").date()
@@ -543,6 +615,7 @@ def main():
     else:
         fitbit_date = fitbit_date_value
 
+    # Time input for playback window
     start_time_input = col1.time_input(
         "Start Time (HH:MM)",
         value=datetime.strptime("14:12", "%H:%M").time(),
@@ -556,7 +629,8 @@ def main():
         key="alignment_duration"
     )
 
-    if st.button("Auto-Align with Fitbit Heart Data", key="align_btn"):
+    # Align and visualize fear scores with heart rate
+    if st.button("Load Fitbit vs Heart Data", key="align_btn"):
         try:
             fear_df = st.session_state.get("fear_results_df")
 
@@ -564,13 +638,16 @@ def main():
                 st.warning("Please run a fear analysis first (YouTube transcript).")
                 st.stop()
 
-            # Debug: Show what columns are available
+            # ======================================================
+            # DEBUG PANEL: Show DataFrame Structure
+            # ======================================================
+            # Helpful for troubleshooting column name mismatches
             with st.expander("Debug: Fear DataFrame Info"):
                 st.write("Available columns:", list(fear_df.columns))
                 st.write("DataFrame shape:", fear_df.shape)
                 st.write("Data types:", fear_df.dtypes.to_dict())
                 
-                # Check for time column
+                # Check for time column (may have different names)
                 for col in ['seconds', 'Seconds', 'timestamp', 'Timestamp', 'Start (s)']:
                     if col in fear_df.columns:
                         st.write(f"Found time column: '{col}'")
@@ -580,24 +657,25 @@ def main():
                 
                 st.dataframe(fear_df.head())
 
-            # ---------------------------------------
-            # Setup playback window
-            # ---------------------------------------
+            # ======================================================
+            # Setup Playback Window (Eastern Time)
+            # ======================================================
             eastern = pytz.timezone("US/Eastern")
 
-            # Combine date and time properly
+            # Combine date and time inputs into datetime objects
             start_dt = eastern.localize(datetime.combine(fitbit_date, start_time_input))
             end_dt = start_dt + timedelta(minutes=duration_minutes)
 
             st.info(f"Playback window: {start_dt.strftime('%I:%M %p')} → {end_dt.strftime('%I:%M %p')}")
 
             # ---------------------------------------
-            # Fetch Fitbit data for that time window
+            # Fetch Fitbit data for time window
             # ---------------------------------------
             start_str = start_dt.strftime("%H:%M")
             end_str = end_dt.strftime("%H:%M")
             date_str = fitbit_date.strftime("%Y-%m-%d")
 
+            # Fitbit API endpoint for intraday heart rate
             endpoint = f"/1/user/-/activities/heart/date/{date_str}/1d/1min/time/{start_str}/{end_str}.json"
             data = fetch_fitbit_data(endpoint)
 
@@ -606,30 +684,35 @@ def main():
                 st.error("No intraday heart rate data found for that window.")
                 st.stop()
 
+            # Convert to DataFrame with timezone-aware datetime
             heart_df = pd.DataFrame(intraday)
             heart_df["datetime"] = pd.to_datetime(date_str + " " + heart_df["time"])
             heart_df["datetime"] = heart_df["datetime"].dt.tz_localize(eastern)
 
             st.success(f"✓ Fetched {len(heart_df)} heart rate readings")
 
-            # ---------------------------------------
-            # Rename fear score column if necessary
-            # ---------------------------------------
+            # ======================================================
+            # Normalize Column Names
+            # ======================================================
+            # Ensure consistent naming for downstream processing
             if "Fear Mongering Score" in fear_df.columns:
                 fear_df = fear_df.rename(columns={"Fear Mongering Score": "fear_score"})
 
-            # ---------------------------------------
-            # Align & visualize
-            # ---------------------------------------
+            # ======================================================
+            # Align & Visualize
+            # ======================================================
+            # Time-align fear scores with heart rate data
             fig, merged_df = align_fear_and_heart(fear_df, heart_df, start_dt, end_dt)
 
-            st.subheader("Aligned Fear vs Heart Rate")
+            st.subheader("Fear vs Heart Rate Chart")
             st.plotly_chart(fig, use_container_width=True)
 
-            # Show summary statistics
+            # ======================================================
+            # Summary Statistics
+            # ======================================================
             summary_col1, summary_col2, summary_col3 = st.columns(3)
             
-            # Find the fear score column name
+            # Find the fear score column (handle different possible names)
             fear_score_col = None
             for col in ['fear_score', 'Fear Mongering Score', 'score', 'Score']:
                 if col in merged_df.columns:
@@ -641,6 +724,9 @@ def main():
             summary_col2.metric("Avg Heart Rate", f"{merged_df['value'].mean():.0f} bpm")
             summary_col3.metric("Data Points", len(merged_df))
 
+            # ======================================================
+            # Show Aligned Data Table
+            # ======================================================
             with st.expander("Show Aligned Data"):
                 st.dataframe(merged_df.head(20))
                 
@@ -655,6 +741,7 @@ def main():
                 )
 
         except Exception as e:
+            # Error handling with full traceback for debugging
             st.error(f"Error aligning Fitbit and fear data: {e}")
             import traceback
             st.error(traceback.format_exc())
