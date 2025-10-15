@@ -79,35 +79,6 @@ def segment_text(text, max_chars=MAX_CHARS, max_sentences=5):
         paragraphs.append(" ".join(current).strip())
 
     return paragraphs
-# def segment_text(text, max_chars=MAX_CHARS, max_sentences=5):
-#     """Split text into paragraphs based on sentence boundaries and limits."""
-
-#     sentences = re.split(r'(?<=[.!?])\s+', text)
-#     paragraphs, current = [], []
-#     current_len, sentence_count = 0, 0
-
-#     for sentence in sentences:
-#         sentence = sentence.strip()
-#         if not sentence:
-#             continue
-
-#         space = 1 if current else 0
-#         if (current_len + len(sentence) + space > max_chars) or (sentence_count >= max_sentences):
-#             if current:
-#                 paragraphs.append(" ".join(current).strip())
-#             current = [sentence]
-#             current_len = len(sentence)
-#             sentence_count = 1
-#         else:
-#             current.append(sentence)
-#             current_len += len(sentence) + space
-#             sentence_count += 1
-
-#     if current:
-#         paragraphs.append(" ".join(current).strip())
-
-#     return paragraphs
-
 
 def assign_timestamps(paragraphs, total_duration_sec):
     """Assign evenly spaced timestamps based on fake total duration."""
@@ -304,8 +275,7 @@ def fetch_transcript(video_id):
 # ======================================================
 
 def main():
-    # st.set_page_config("Quick Fear Mongering Check", layout="wide")
-    st.title("Quick Fear Mongering Check")
+    st.title("Backend Test - Fear Monger Processor")
 
     # ======================================================
     # Segmentation Settings

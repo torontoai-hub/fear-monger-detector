@@ -16,20 +16,6 @@ def get_video_id(url_or_id):
         pass
     return None
 
-# def fetch_transcript(video_id):
-#     try:
-#         ytt_api = YouTubeTranscriptApi()
-#         transcript_list = ytt_api.list(video_id)
-#         try:
-#             transcript = transcript_list.find_manually_created_transcript(["en-US", "en"])
-#         except Exception:
-#             transcript = transcript_list.find_generated_transcript(["en"])
-#         return " ".join([snippet.text for snippet in transcript.fetch()])
-#     except Exception as e:
-#         st.error(f"Error fetching transcript: {e}")
-#         return None
-
-
 
 @st.cache_data
 def fetch_transcript(video_id):
