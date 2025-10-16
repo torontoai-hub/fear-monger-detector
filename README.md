@@ -109,7 +109,7 @@ fear-monger-detector/
 ### 📦Installation
 ```bash
 # Clone repository
-git clone https://github.com/your-org/fear-monger-detector.git
+git clone https://github.com/torontoai-hub/fear-monger-detector.git
 cd fear-monger-detector
 
 # Create virtual environment
